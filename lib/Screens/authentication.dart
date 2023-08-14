@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ValidationScreen extends StatefulWidget {
+class AuthenticationScreen extends StatefulWidget {
+  const AuthenticationScreen({super.key});
+
   @override
-  State<ValidationScreen> createState() => _ValidationScreenState();
+  State<AuthenticationScreen> createState() => _AuthenticationScreenState();
 }
 
-class _ValidationScreenState extends State<ValidationScreen> {
+class _AuthenticationScreenState extends State<AuthenticationScreen> {
   final _form = GlobalKey<FormState>();
   var _enteredPassword = '';
   var _enteredEmail = '';
@@ -41,7 +43,7 @@ class _ValidationScreenState extends State<ValidationScreen> {
                         decoration: const InputDecoration(
                           label: Text(
                             'نام کاربری',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.white,),
                           ),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),

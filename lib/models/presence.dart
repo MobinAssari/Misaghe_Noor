@@ -16,7 +16,7 @@ class Presence {
   final DateTime exitTime;
   final Duration total;
 
-  Duration GetTotalTime() {
+  Duration getTotalTime() {
     var total = exitTime.difference(enterTime);
     return total;
   }
