@@ -16,7 +16,7 @@ class AuthenticationScreen extends ConsumerWidget {
 
   @override
   Widget build(context, ref) {
-    void _submit() {
+    void submit() {
       if (_form.currentState!.validate()) {
         _form.currentState!.save();
         print(_enteredPassword);
@@ -111,7 +111,7 @@ class AuthenticationScreen extends ConsumerWidget {
                         height: 16,
                       ),
                       ElevatedButton(
-                        onPressed: _submit,
+                        onPressed: submit,
                         style: ElevatedButton.styleFrom(
                             backgroundColor:
                                 const Color.fromARGB(255, 191, 191, 203)),
