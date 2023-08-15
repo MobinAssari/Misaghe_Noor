@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misaghe_noor/data/dummy_activity.dart';
 import 'package:misaghe_noor/models/activity.dart';
-import 'package:misaghe_noor/models/member.dart';
 
 class ActivityNotifier extends StateNotifier<List<Activity>> {
   ActivityNotifier() : super(dummyActivity);

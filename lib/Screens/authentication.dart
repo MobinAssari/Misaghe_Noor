@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misaghe_noor/Screens/home.dart';
-import 'package:misaghe_noor/data/dummy_user.dart';
 import 'package:misaghe_noor/provider/users_provider.dart';
-
+//todo message if username didn't found
 class AuthenticationScreen extends ConsumerWidget {
   AuthenticationScreen({super.key});
 
