@@ -12,7 +12,7 @@ class Member {
     required this.moblie,
   });
 
-  final String id;
+  final int id;
   final String name;
   final String fatherName;
   final int meliNumber;
