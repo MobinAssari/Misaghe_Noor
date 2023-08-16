@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:misaghe_noor/Screens/members.dart';
 import 'package:misaghe_noor/data/dummy_member.dart';
 import 'package:misaghe_noor/data/dummy_user.dart';
 
@@ -55,11 +56,10 @@ class HomeScreen extends StatelessWidget {
                   height: 70,
                   width: 300,
                   child: ElevatedButton(
-                    onPressed: save,
+                    onPressed: () {},
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(const Color.fromARGB(
-                              194, 206, 203, 203)),
+                      backgroundColor: MaterialStateProperty.all(
+                          const Color.fromARGB(194, 206, 203, 203)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
@@ -73,7 +73,13 @@ class HomeScreen extends StatelessWidget {
                   height: 70,
                   width: 250,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => MembersScreen(),
+                        ),
+                      );
+                    },
                     child: const Text('اعضا'),
                   ),
                 ),

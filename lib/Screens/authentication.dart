@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misaghe_noor/Screens/home.dart';
 import 'package:misaghe_noor/provider/users_provider.dart';
+
 //todo message if username didn't found
 class AuthenticationScreen extends ConsumerWidget {
   AuthenticationScreen({super.key});
@@ -12,8 +13,6 @@ class AuthenticationScreen extends ConsumerWidget {
   final TextEditingController userController = TextEditingController();
   final TextEditingController passController = TextEditingController();
 
-
-
   @override
   Widget build(context, ref) {
     void submit() {
@@ -23,10 +22,14 @@ class AuthenticationScreen extends ConsumerWidget {
         print(_enteredEmail);
         final userList = ref.watch(usersProvider);
 
-        for(var user in userList){
-          if(user.userName == userController.text.trim()){
-            if(user.password == passController.text.trim()){
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) => const HomeScreen()));
+        for (var user in userList) {
+          if (user.userName == userController.text.trim()) {
+            if (user.password == passController.text.trim()) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (ctx) => const HomeScreen(),
+                ),
+              );
             }
           }
         }
@@ -84,7 +87,6 @@ class AuthenticationScreen extends ConsumerWidget {
                             _enteredEmail = value!;
                           }),
                       TextFormField(
-
                         decoration: const InputDecoration(
                           label: Text(
                             'رمز عبور',
