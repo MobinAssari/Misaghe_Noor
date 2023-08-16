@@ -9,7 +9,8 @@ class Member {
     required this.shenasnameNumber,
     required this.address,
     required this.phone,
-    required this.moblie,
+    required this.mobile,
+    required this.lastChangeUsreId
   });
 
   final int id;
@@ -19,5 +20,6 @@ class Member {
   final int shenasnameNumber;
   final String address;
   final int phone;
-  final int moblie;
+  final int mobile;
+  final String lastChangeUsreId;
 }

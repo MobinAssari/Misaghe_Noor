@@ -26,7 +26,7 @@ class AuthenticationScreen extends ConsumerWidget {
         for(var user in userList){
           if(user.userName == userController.text.trim()){
             if(user.password == passController.text.trim()){
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) => HomeScreen()));
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) => const HomeScreen()));
             }
           }
         }
