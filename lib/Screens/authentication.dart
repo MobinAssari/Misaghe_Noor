@@ -40,7 +40,7 @@ class AuthenticationScreen extends ConsumerWidget {
             height: double.infinity,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/mosque.png'),
+                image: AssetImage('assets/images/wallpaper2.png'),
                 fit: BoxFit.cover,
               ),
             ),

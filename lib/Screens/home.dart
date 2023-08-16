@@ -36,52 +36,67 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(
-              height: 70,
-              width: 300,
-              child: ElevatedButton(
-                onPressed: save,
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(50)),
+      body: Stack(
+        children: [
+          Container(
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/wallpaper6.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  height: 70,
+                  width: 300,
+                  child: ElevatedButton(
+                    onPressed: save,
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(const Color.fromARGB(
+                              194, 206, 203, 203)),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                        ),
+                      ),
                     ),
+                    child: const Text('جلسات'),
                   ),
                 ),
-                child: const Text('جلسات'),
-              ),
+                SizedBox(
+                  height: 70,
+                  width: 250,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('اعضا'),
+                  ),
+                ),
+                SizedBox(
+                  height: 70,
+                  width: 250,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('گزارشات'),
+                  ),
+                ),
+                SizedBox(
+                  height: 70,
+                  width: 250,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('؟؟'),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(
-              height: 70,
-              width: 250,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Text('اعضا'),
-              ),
-            ),
-            SizedBox(
-              height: 70,
-              width: 250,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Text('گزارشات'),
-              ),
-            ),
-            SizedBox(
-              height: 70,
-              width: 250,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Text('؟؟'),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
