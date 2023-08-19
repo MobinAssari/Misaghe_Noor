@@ -1,14 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:misaghe_noor/models/member.dart';
-import 'package:misaghe_noor/models/user.dart';
 import 'package:misaghe_noor/provider/members_provider.dart';
-import 'package:misaghe_noor/provider/users_provider.dart';
 
-//todo define empty list
 //todo better ui
 //todo link to member details
 //todo animation
@@ -56,7 +52,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
   @override
   Widget build(context) {
     List<Member> memberList = ref.watch(membersProvider);
-    var mainContent;
+    Widget mainContent;
     if (_isLoading) {
       mainContent = const Center(
         child: CircularProgressIndicator(),
@@ -67,9 +63,26 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
       mainContent = ListView.builder(
         itemCount: memberList.length,
         itemBuilder: (ctx, index) {
-          return ListTile(
-            title: Text(
-              memberList[index].name,
+          return Container(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(171, 197, 191, 171),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: ListTile(
+              leading: const Icon(Icons.supervised_user_circle),
+              title: Text(
+                memberList[index].name,
+              ),
+              trailing:  Wrap(
+                children: [
+                  IconButton( onPressed: (){}, icon: const Icon( Icons.edit),),
+                  IconButton( onPressed: (){}, icon: const Icon( Icons.delete),),
+                ],
+              ),
+
+
             ),
           );
         },
@@ -80,7 +93,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('لیست اعضا'),
+          title: const Text('لیست اعضا'),
           actions: [
             IconButton(
               onPressed: () {},
