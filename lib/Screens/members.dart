@@ -34,6 +34,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
       loadedItems.add(Member(
           id: item.key,
           name: item.value['name'],
+          family: item.value['family'],
           fatherName: item.value['fatherName'],
           meliNumber: item.value['meliNumber'],
           shenasnameNumber: item.value['shenasnameNumber'],
@@ -63,27 +64,40 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
       mainContent = ListView.builder(
         itemCount: memberList.length,
         itemBuilder: (ctx, index) {
-          return Container(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(171, 197, 191, 171),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: ListTile(
-              leading: const Icon(Icons.supervised_user_circle),
-              title: Text(
-                memberList[index].name,
-              ),
-              trailing:  Wrap(
-                children: [
-                  IconButton( onPressed: (){}, icon: const Icon( Icons.edit),),
-                  IconButton( onPressed: (){}, icon: const Icon( Icons.delete),),
-                ],
-              ),
+          return Column(
+            children: [
+              ListTile(
+                // leading: const Icon(Icons.supervised_user_circle),
+                title: Text(
+                    " ${memberList[index].name} ${memberList[index].family}"),
+                trailing: Wrap(
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.edit,
+                        color: Colors.greenAccent,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        final url = Uri.https(
+                            'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
+                            'members-list/${memberList[index].id}.json');
+                        http.delete(url);
 
-
-            ),
+                        ref
+                            .read(membersProvider.notifier)
+                            .removeMember(memberList[index]);
+                        memberList.remove(memberList[index]);
+                      },
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(),
+            ],
           );
         },
       );

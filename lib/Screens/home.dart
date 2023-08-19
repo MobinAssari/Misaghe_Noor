@@ -18,6 +18,7 @@ class HomeScreen extends StatelessWidget {
         body: json.encode(
           {
             'name': user.name,
+            'family': user.family,
             'fatherName': user.fatherName,
             'meliNumber': user.meliNumber,
             'shenasnameNumber': user.shenasnameNumber,
@@ -54,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                   height: 70,
                   width: 300,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: save,
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
                           const Color.fromARGB(194, 206, 203, 203)),

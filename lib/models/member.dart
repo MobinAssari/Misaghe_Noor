@@ -4,6 +4,7 @@ class Member {
   Member({
     required this.id,
     required this.name,
+    required this.family,
     required this.fatherName,
     required this.meliNumber,
     required this.shenasnameNumber,
@@ -15,6 +16,7 @@ class Member {
 
   final String id;
   final String name;
+  final String family;
   final String fatherName;
   final int meliNumber;
   final int shenasnameNumber;
