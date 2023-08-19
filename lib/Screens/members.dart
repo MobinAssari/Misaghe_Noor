@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:misaghe_noor/Screens/new_user.dart';
 import 'package:misaghe_noor/models/member.dart';
 import 'package:misaghe_noor/provider/members_provider.dart';
 
-//todo better ui
+//todo add member
 //todo link to member details
+//todo better ui
 //todo animation
 class MembersScreen extends ConsumerStatefulWidget {
   @override
@@ -42,7 +44,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
           phone: item.value['phone'],
           mobile: item.value['mobile'],
           lastChangeUsreId: item.value['lastChangeUsreId']));
-      ref.read(membersProvider.notifier).addMember(loadedItems.cast<Member>());
+      ref.read(membersProvider.notifier).addMembers(loadedItems.cast<Member>());
     }
 
     setState(() {
@@ -82,25 +84,26 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                     IconButton(
                       onPressed: () {
                         showDialog(context: context, builder: (context) =>
-                            AlertDialog(
-                              content: Text('عضو حذف شود؟'),
-                              actions: [
-                                TextButton(onPressed: (){
-                                  final url = Uri.https(
-                                      'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-                                      'members-list/${memberList[index].id}.json');
-                                  http.delete(url);
+                            Directionality(textDirection: TextDirection.rtl,
+                              child: AlertDialog(
+                                content: Text('عضو حذف شود؟'),
+                                actions: [
+                                  TextButton(onPressed: (){
+                                    final url = Uri.https(
+                                        'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
+                                        'members-list/${memberList[index].id}.json');
+                                    http.delete(url);
 
-                                  ref
-                                      .read(membersProvider.notifier)
-                                      .removeMember(memberList[index]);
-                                  memberList.remove(memberList[index]);
-                                  Navigator.pop(context);
-                                }, child: Text('بله')),
-                                TextButton(onPressed:()=> Navigator.pop(context), child: Text('خیر'))
-                              ],
+                                    ref
+                                        .read(membersProvider.notifier)
+                                        .removeMember(memberList[index]);
+                                    memberList.remove(memberList[index]);
+                                    Navigator.pop(context);
+                                  }, child: Text('بله')),
+                                  TextButton(onPressed:()=> Navigator.pop(context), child: Text('خیر'))
+                                ],
+                              ),
                             ));
-
                       },
                       icon: const Icon(Icons.delete, color: Colors.red),
                     ),
@@ -121,7 +124,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
           title: const Text('لیست اعضا'),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {Navigator.of(context).push(MaterialPageRoute(builder: (context)=> NewMemberScreen()));},
               icon: const Icon(Icons.add),
             ),
           ],

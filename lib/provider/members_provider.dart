@@ -5,8 +5,11 @@ import 'package:misaghe_noor/models/member.dart';
 class MemberNotifier extends StateNotifier<List<Member>> {
   MemberNotifier() : super([]);
 
-  void addMember(List<Member> memberList) {
+  void addMembers(List<Member> memberList) {
     state = [...memberList];
+  }
+  void addMember(Member member) {
+    state = [...state, member];
   }
 
   void removeMember(Member member) {

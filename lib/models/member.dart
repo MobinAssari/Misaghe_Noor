@@ -17,11 +17,11 @@ class Member {
   final String id;
   final String name;
   final String family;
-  final String fatherName;
-  final int meliNumber;
-  final int shenasnameNumber;
-  final String address;
-  final int phone;
-  final int mobile;
-  final String lastChangeUsreId;
+  final String? fatherName;
+  final String? meliNumber;
+  final String? shenasnameNumber;
+  final String? phone;
+  final String? mobile;
+  final String? address;
+  final String? lastChangeUsreId;
 }
