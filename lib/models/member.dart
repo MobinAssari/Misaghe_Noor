@@ -13,7 +13,7 @@ class Member {
     required this.lastChangeUsreId
   });
 
-  final int id;
+  final String id;
   final String name;
   final String fatherName;
   final int meliNumber;

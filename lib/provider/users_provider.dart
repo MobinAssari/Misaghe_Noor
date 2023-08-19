@@ -5,8 +5,8 @@ import '../models/user.dart';
 class UserNotifier extends StateNotifier<List<User>> {
   UserNotifier() : super(dummyUser);
 
-  void addUsers(User user) {
-    state = [...state, user];
+  void addUsers(List<User> userList) {
+    state = [...userList];
   }
 
   void removeUser(User user) {
