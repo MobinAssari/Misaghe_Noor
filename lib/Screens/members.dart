@@ -81,15 +81,26 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                     ),
                     IconButton(
                       onPressed: () {
-                        final url = Uri.https(
-                            'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-                            'members-list/${memberList[index].id}.json');
-                        http.delete(url);
+                        showDialog(context: context, builder: (context) =>
+                            AlertDialog(
+                              content: Text('عضو حذف شود؟'),
+                              actions: [
+                                TextButton(onPressed: (){
+                                  final url = Uri.https(
+                                      'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
+                                      'members-list/${memberList[index].id}.json');
+                                  http.delete(url);
 
-                        ref
-                            .read(membersProvider.notifier)
-                            .removeMember(memberList[index]);
-                        memberList.remove(memberList[index]);
+                                  ref
+                                      .read(membersProvider.notifier)
+                                      .removeMember(memberList[index]);
+                                  memberList.remove(memberList[index]);
+                                  Navigator.pop(context);
+                                }, child: Text('بله')),
+                                TextButton(onPressed:()=> Navigator.pop(context), child: Text('خیر'))
+                              ],
+                            ));
+
                       },
                       icon: const Icon(Icons.delete, color: Colors.red),
                     ),
