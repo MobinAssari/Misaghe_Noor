@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -8,12 +6,21 @@ import 'package:misaghe_noor/data/dummy_user.dart';
 import 'package:misaghe_noor/models/member.dart';
 import 'package:misaghe_noor/provider/members_provider.dart';
 
-class NewMemberScreen extends ConsumerStatefulWidget {
+class MemberDetailsScreen extends ConsumerStatefulWidget {
+  const MemberDetailsScreen(
+      {super.key, required this.isEdit, required this.userId});
+
+  final bool isEdit;
+  final String userId;
+
   @override
-  ConsumerState<NewMemberScreen> createState() => _NewUserScreenState();
+  ConsumerState<MemberDetailsScreen> createState() =>
+      _MemberDetailsScreenState();
 }
 
-class _NewUserScreenState extends ConsumerState<NewMemberScreen> {
+class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
+
+  Member? member;
   var isSending = false;
   final _form = GlobalKey<FormState>();
   var inputName = '';
@@ -27,35 +34,57 @@ class _NewUserScreenState extends ConsumerState<NewMemberScreen> {
 
   @override
   Widget build(context) {
+    var isEdit = widget.isEdit;
+    if (isEdit) {
+      member = ref.read(membersProvider.notifier).findUser(widget.userId);
+    }
     void Submit() async {
       if (_form.currentState!.validate()) {
         setState(() {
           isSending = true;
         });
         _form.currentState!.save();
-        final url = Uri.https(
-            'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-            'members-list.json');
-        final response = await http.post(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(
-            {
-              'name': inputName,
-              'family': inputFamily,
-              'fatherName': inputFather,
-              'meliNumber': inputMeli,
-              'shenasnameNumber': inputShShenasname,
-              'address': inputAddress,
-              'phone': inputPhone,
-              'mobile': inputMobile,
-              'lastChangeUsreId': dummyUser[0].id,
-            },
-          ),
+        Object myBody = json.encode(
+          {
+            'name': inputName,
+            'family': inputFamily,
+            'fatherName': inputFather,
+            'meliNumber': inputMeli,
+            'shenasnameNumber': inputShShenasname,
+            'address': inputAddress,
+            'phone': inputPhone,
+            'mobile': inputMobile,
+            'lastChangeUsreId': dummyUser[0].id,
+          },
         );
-        final Map<String, dynamic> resData = json.decode(response.body);
+        final memberId;
+        if(isEdit){
+          final url = Uri.https(
+              'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
+              'members-list/${member?.id}.json');
+          http.patch(url,body: myBody );
+          memberId = member?.id;
+          ref
+              .read(membersProvider.notifier)
+              .removeMember(member!);
+
+
+        }
+        else {
+          final url = Uri.https(
+              'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
+              'members-list.json');
+          final response = await http.post(
+            url,
+            headers: {'Content-Type': 'application/json'},
+            body: myBody,
+          );
+          final Map<String, dynamic> resData = json.decode(response.body);
+          memberId = resData['name'];
+
+        }
         ref.read(membersProvider.notifier).addMember(Member(
-            id: resData['name'],
+            id: memberId,
             name: inputName,
             family: inputFamily,
             fatherName: inputFather,
@@ -84,6 +113,7 @@ class _NewUserScreenState extends ConsumerState<NewMemberScreen> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                        initialValue: isEdit ? member?.name : '',
                         decoration: const InputDecoration(
                           label: Text('نام'),
                         ),
@@ -99,6 +129,7 @@ class _NewUserScreenState extends ConsumerState<NewMemberScreen> {
                     ),
                     Expanded(
                       child: TextFormField(
+                        initialValue: isEdit ? member?.family : '',
                         decoration: const InputDecoration(
                           label: Text('نام خانوادگی'),
                         ),
@@ -118,6 +149,7 @@ class _NewUserScreenState extends ConsumerState<NewMemberScreen> {
                 SizedBox(
                   width: 160,
                   child: TextFormField(
+                    initialValue: isEdit ? member?.fatherName : '',
                     decoration: const InputDecoration(
                       label: Text('نام پدر'),
                     ),
@@ -136,6 +168,7 @@ class _NewUserScreenState extends ConsumerState<NewMemberScreen> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                        initialValue: isEdit ? member?.meliNumber : '',
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                           label: Text('کد ملی'),
@@ -148,6 +181,7 @@ class _NewUserScreenState extends ConsumerState<NewMemberScreen> {
                     ),
                     Expanded(
                       child: TextFormField(
+                        initialValue: isEdit ? member?.shenasnameNumber : '',
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                           label: Text('شماره شناسنامه'),
@@ -165,6 +199,7 @@ class _NewUserScreenState extends ConsumerState<NewMemberScreen> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                        initialValue: isEdit ? member?.phone : '',
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                           label: Text('شماره تلفن'),
@@ -177,6 +212,7 @@ class _NewUserScreenState extends ConsumerState<NewMemberScreen> {
                     ),
                     Expanded(
                       child: TextFormField(
+                        initialValue: isEdit ? member?.mobile : '',
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                           label: Text('شماره همراه'),
@@ -191,6 +227,7 @@ class _NewUserScreenState extends ConsumerState<NewMemberScreen> {
                 ),
                 SizedBox(
                   child: TextFormField(
+                    initialValue: isEdit ? member?.address : '',
                     decoration: const InputDecoration(
                       label: Text('آدرس'),
                     ),
@@ -202,15 +239,18 @@ class _NewUserScreenState extends ConsumerState<NewMemberScreen> {
                   child: Row(
                     children: [
                       ElevatedButton(
-                          onPressed: () => isSending ? null :  Navigator.of(context).pop(),
+                          onPressed: () =>
+                              isSending ? null : Navigator.of(context).pop(),
                           child: const Text('لغو')),
                       const SizedBox(
                         width: 8,
                       ),
                       ElevatedButton(
-                        onPressed: isSending ? null: () {
-                          Submit();
-                        },
+                        onPressed: isSending
+                            ? null
+                            : () {
+                                Submit();
+                              },
                         child: const Text('ذخیره'),
                       ),
                     ],

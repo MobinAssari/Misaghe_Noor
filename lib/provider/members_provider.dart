@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:misaghe_noor/data/dummy_member.dart';
 import 'package:misaghe_noor/models/member.dart';
 
 class MemberNotifier extends StateNotifier<List<Member>> {
@@ -14,6 +13,12 @@ class MemberNotifier extends StateNotifier<List<Member>> {
 
   void removeMember(Member member) {
     state = state.where((m) => m.id != member.id).toList();
+  }
+  Member? findUser(String id){
+    for(var member in state){
+      if(member.id == id) return member;
+    }
+    return null;
   }
 }
 final membersProvider =

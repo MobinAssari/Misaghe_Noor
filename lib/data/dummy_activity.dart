@@ -1,8 +1,8 @@
 import '../models/activity.dart';
 
 List<Activity> dummyActivity = [
-  Activity(name: 'حمایش'),
-  Activity(name: 'جلسه قران'),
-  Activity(name: 'کلاس'),
-  Activity(name: 'ورزش'),
+  Activity(name: 'حمایش', id: '0'),
+  Activity(name: 'جلسه قران', id: '1'),
+  Activity(name: 'کلاس', id: '2'),
+  Activity(name: 'ورزش', id: '3'),
 ];

@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:misaghe_noor/Screens/meetings.dart';
 import 'package:misaghe_noor/Screens/members.dart';
-import 'package:misaghe_noor/data/dummy_member.dart';
+import 'package:misaghe_noor/data/dummy_meeting.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,25 +11,22 @@ class HomeScreen extends StatelessWidget {
   void save() async {
     final url = Uri.https(
         'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-        'members-list.json');
-    for (var user in dummyMember) {
+        'meetings-list.json');
+    for (var meeting in dummyMeeting) {
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
         body: json.encode(
-          {
-            'name': user.name,
-            'family': user.family,
-            'fatherName': user.fatherName,
-            'meliNumber': user.meliNumber,
-            'shenasnameNumber': user.shenasnameNumber,
-            'address': user.address,
-            'phone': user.phone,
-            'mobile': user.mobile,
-            'lastChangeUsreId': user.lastChangeUsreId,
-          },
+        {
+            'date': meeting.date.toString(),
+            'description': meeting.description,
+            'lastChangeUserId': meeting.lastChangeUserId,
+            'activityName': meeting.activityName,
+
+        },
         ),
       );
+
       print(response.body);
     }
   }
@@ -55,10 +53,16 @@ class HomeScreen extends StatelessWidget {
                   height: 70,
                   width: 300,
                   child: ElevatedButton(
-                    onPressed: save,
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => const MeetingsScreen(),
+                          ),
+                        );
+                      },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(194, 206, 203, 203)),
+                          const Color.fromARGB(194, 206, 203, 203),),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(50)),
@@ -94,7 +98,7 @@ class HomeScreen extends StatelessWidget {
                   height: 70,
                   width: 250,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: save,
                     child: const Text('؟؟'),
                   ),
                 ),
