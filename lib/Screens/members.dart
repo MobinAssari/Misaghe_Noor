@@ -18,6 +18,8 @@ class MembersScreen extends ConsumerStatefulWidget {
 class _MembersScreenState extends ConsumerState<MembersScreen> {
   bool _isLoading = true;
   bool _isSearching = false;
+  TextEditingController searchController = TextEditingController();
+
 
   @override
   void initState() {
@@ -59,7 +61,6 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
     });
   }
 
-  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(context) {

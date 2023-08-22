@@ -16,6 +16,8 @@ class MeetingsScreen extends ConsumerStatefulWidget {
 
 class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
   bool _isLoading = true;
+  bool _isSearching = false;
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -49,81 +51,92 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
   @override
   Widget build(BuildContext context) {
     List<Meeting> meetingList = ref.watch(meetingsProvider);
+    if (_isSearching) {
+      meetingList = meetingList
+          .where((meeting) =>
+      meeting.activityName.trim().contains(searchController.text.trim()) ||
+          meeting.description.trim().contains(searchController.text.trim()))
+          .toList();
+    }
     Widget mainContent;
     if (_isLoading) {
-      mainContent = const Center(
-        child: CircularProgressIndicator(),
+      mainContent = const Expanded(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     } else if (meetingList.isEmpty) {
-      mainContent = const Center(child: Text('هیج جلسه ای یافت نشد!'));
+      mainContent = const Expanded(child: Center(child: Text('هیج جلسه ای یافت نشد!')));
     } else {
-      mainContent = ListView.builder(
-        itemCount: meetingList.length,
-        itemBuilder: (ctx, index) {
-          return Column(
-            children: [
-              ListTile(
-                // leading: const Icon(Icons.supervised_user_circle),
-                title: Text(
-                    " ${meetingList[index].activityName}"),
-                trailing: Wrap(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => MeetingDetailsScreen(
-                              isEdit: true,
-                              userId: meetingList[index].id,
+      mainContent = Expanded(
+        child: ListView.builder(
+          itemCount: meetingList.length,
+          itemBuilder: (ctx, index) {
+            return Column(
+              children: [
+                ListTile(
+                  // leading: const Icon(Icons.supervised_user_circle),
+                  title: Text(
+                      " ${meetingList[index].activityName}"),
+                  trailing: Wrap(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => MeetingDetailsScreen(
+                                isEdit: true,
+                                userId: meetingList[index].id,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.edit,
-                        color: Colors.greenAccent,
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.greenAccent,
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: AlertDialog(
-                              content: Text('جلسه حذف شود؟'),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      final url = Uri.https(
-                                          'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-                                          'members-list/${meetingList[index].id}.json');
-                                      http.delete(url);
+                      IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: AlertDialog(
+                                content: Text('جلسه حذف شود؟'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        final url = Uri.https(
+                                            'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
+                                            'members-list/${meetingList[index].id}.json');
+                                        http.delete(url);
 
-                                      ref
-                                          .read(meetingsProvider.notifier)
-                                          .removeMeeting(meetingList[index]);
-                                      meetingList.remove(meetingList[index]);
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text('بله')),
-                                TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Text('خیر'))
-                              ],
+                                        ref
+                                            .read(meetingsProvider.notifier)
+                                            .removeMeeting(meetingList[index]);
+                                        meetingList.remove(meetingList[index]);
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('بله')),
+                                  TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text('خیر'))
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                    ),
-                  ],
+                          );
+                        },
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Divider(),
-            ],
-          );
-        },
+                Divider(),
+              ],
+            );
+          },
+        ),
       );
     }
 
@@ -149,7 +162,43 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
             ),
           ],
         ),
-        body: mainContent,
+        body: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                //mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                      width: 300,
+                      child: TextField(decoration: const InputDecoration(
+                        label: Icon(Icons.search),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blueAccent),
+                        ),
+                      ),
+                        controller: searchController,
+                        onChanged: (value) {
+                          if (value.trim().isNotEmpty) {
+                            setState(() {
+                              _isSearching = true;
+                            });
+                          } else {
+                            setState(() {
+                              _isSearching = false;
+                            });
+                          }
+                        },
+                      )),
+
+                ],
+              ),
+            ),
+            Divider(),
+            Container(child: mainContent),
+          ],
+        ),
       ),
     );
   }
