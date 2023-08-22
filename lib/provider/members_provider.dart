@@ -14,7 +14,7 @@ class MemberNotifier extends StateNotifier<List<Member>> {
   void removeMember(Member member) {
     state = state.where((m) => m.id != member.id).toList();
   }
-  Member? findUser(String id){
+  Member? findMember(String id){
     for(var member in state){
       if(member.id == id) return member;
     }

@@ -6,6 +6,9 @@ import 'package:misaghe_noor/Screens/authentication.dart';
 import 'package:misaghe_noor/data/dummy_user.dart';
 import 'package:misaghe_noor/models/member.dart';
 import 'package:misaghe_noor/provider/members_provider.dart';
+import 'package:misaghe_noor/provider/users_provider.dart';
+
+import '../models/user.dart';
 
 class MemberDetailsScreen extends ConsumerStatefulWidget {
   const MemberDetailsScreen(
@@ -32,12 +35,16 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
   var inputPhone = '';
   var inputMobile = '';
   var inputAddress = '';
+  User? lastChangedUser;
 
   @override
   Widget build(context) {
+    User? enteredUser = ref.read(usersProvider.notifier).findUser(enteredUserId);
     var isEdit = widget.isEdit;
     if (isEdit) {
-      member = ref.read(membersProvider.notifier).findUser(widget.userId);
+      member = ref.read(membersProvider.notifier).findMember(widget.userId);
+      lastChangedUser = ref.read(usersProvider.notifier).findUser(member!.lastChangeUsreId!);
+
     }
     void Submit() async {
       if (_form.currentState!.validate()) {
@@ -94,7 +101,7 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
             address: inputAddress,
             phone: inputPhone,
             mobile: inputMobile,
-            lastChangeUsreId: dummyUser[0].id));
+            lastChangeUsreId: enteredUserId));
         Navigator.of(context).pop();
       }
     }
@@ -254,6 +261,8 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
                               },
                         child: const Text('ذخیره'),
                       ),
+                      isEdit ? lastChangedUser!.id.isEmpty ? SizedBox(width: 1,) : Text(
+                          ' آخرین تغییر توسط ${lastChangedUser!.name} ${lastChangedUser!.family}') : SizedBox(width: 1,),
                     ],
                   ),
                 ),

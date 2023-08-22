@@ -3,7 +3,7 @@ import 'package:misaghe_noor/data/dummy_user.dart';
 import '../models/user.dart';
 
 class UserNotifier extends StateNotifier<List<User>> {
-  UserNotifier() : super(dummyUser);
+  UserNotifier() : super([]);
 
   void addUsers(List<User> userList) {
     state = [...userList];
@@ -13,7 +13,7 @@ class UserNotifier extends StateNotifier<List<User>> {
     state = state.where((m) => m.userName != user.userName).toList();
   }
 
-  User? findMember(String id){
+  User? findUser(String id){
     for(var user in state){
       if(user.id == id) return user;
     }
