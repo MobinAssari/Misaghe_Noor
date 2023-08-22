@@ -71,6 +71,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                 // leading: const Icon(Icons.supervised_user_circle),
                 title: Text(
                     " ${memberList[index].name} ${memberList[index].family}"),
+               // subtitle: Text(memberList[index].fatherName!),
                 trailing: Wrap(
                   children: [
                     IconButton(

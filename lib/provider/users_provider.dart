@@ -12,6 +12,13 @@ class UserNotifier extends StateNotifier<List<User>> {
   void removeUser(User user) {
     state = state.where((m) => m.userName != user.userName).toList();
   }
+
+  User? findMember(String id){
+    for(var user in state){
+      if(user.id == id) return user;
+    }
+    return null;
+  }
 }
 final usersProvider =
 StateNotifierProvider<UserNotifier, List<User>>((ref) {

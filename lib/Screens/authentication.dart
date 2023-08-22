@@ -1,30 +1,58 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misaghe_noor/Screens/home.dart';
+import 'package:misaghe_noor/models/user.dart';
 import 'package:misaghe_noor/provider/users_provider.dart';
+import 'package:http/http.dart' as http;
+
+String enteredUserId = '';
 
 //todo message if username didn't found
 class AuthenticationScreen extends ConsumerWidget {
   AuthenticationScreen({super.key});
 
   final _form = GlobalKey<FormState>();
-  var _enteredPassword = '';
-  var _enteredEmail = '';
+  String _enteredPassword = '';
+  String _enteredEmail = '';
   final TextEditingController userController = TextEditingController();
   final TextEditingController passController = TextEditingController();
 
   @override
   Widget build(context, ref) {
-    void submit() {
+    void submit() async {
       if (_form.currentState!.validate()) {
         _form.currentState!.save();
         print(_enteredPassword);
         print(_enteredEmail);
+
+        final url = Uri.https(
+            'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
+            'users-list.json');
+        final response = await http.get(url);
+        final Map<String, dynamic> listData = json.decode(response.body);
+        final List<User> loadedItems = [];
+        for (final item in listData.entries) {
+          loadedItems.add(
+            User(
+                id: item.key,
+                name: item.value['name'],
+                family: item.value['family'],
+                userName: item.value['userName'],
+                password: item.value['password'],
+                isAdmin: item.value['isAdmin']),
+          );
+          ref
+              .read(usersProvider.notifier)
+              .addUsers(loadedItems.cast<User>());
+        }
         final userList = ref.watch(usersProvider);
 
         for (var user in userList) {
           if (user.userName == userController.text.trim()) {
             if (user.password == passController.text.trim()) {
+              enteredUserId = user.id;
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (ctx) => const HomeScreen(),
