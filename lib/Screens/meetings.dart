@@ -86,7 +86,7 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
                             MaterialPageRoute(
                               builder: (context) => MeetingDetailsScreen(
                                 isEdit: true,
-                                userId: meetingList[index].id,
+                                meetingId: meetingList[index].id,
                               ),
                             ),
                           );
@@ -153,7 +153,7 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
                   MaterialPageRoute(
                     builder: (context) => const MeetingDetailsScreen(
                       isEdit: false,
-                      userId: '',
+                      meetingId: '',
                     ),
                   ),
                 );

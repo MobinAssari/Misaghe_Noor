@@ -14,7 +14,7 @@ class MeetingNotifier extends StateNotifier<List<Meeting>> {
   void removeMeeting(Meeting meeting) {
     state = state.where((m) => m.id != meeting.id).toList();
   }
-  Meeting? findUser(String id){
+  Meeting? findMeeting(String id){
     for(var meeting in state){
       if(meeting.id == id) return meeting;
     }

@@ -102,7 +102,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                             MaterialPageRoute(
                               builder: (context) => MemberDetailsScreen(
                                 isEdit: true,
-                                userId: memberList[index].id,
+                                memberId: memberList[index].id,
                               ),
                             ),
                           );
@@ -173,7 +173,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                   MaterialPageRoute(
                     builder: (context) => const MemberDetailsScreen(
                       isEdit: false,
-                      userId: '',
+                      memberId: '',
                     ),
                   ),
                 );

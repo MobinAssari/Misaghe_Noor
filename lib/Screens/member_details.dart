@@ -12,10 +12,10 @@ import '../models/user.dart';
 
 class MemberDetailsScreen extends ConsumerStatefulWidget {
   const MemberDetailsScreen(
-      {super.key, required this.isEdit, required this.userId});
+      {super.key, required this.isEdit, required this.memberId});
 
   final bool isEdit;
-  final String userId;
+  final String memberId;
 
   @override
   ConsumerState<MemberDetailsScreen> createState() =>
@@ -42,9 +42,8 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
     User? enteredUser = ref.read(usersProvider.notifier).findUser(enteredUserId);
     var isEdit = widget.isEdit;
     if (isEdit) {
-      member = ref.read(membersProvider.notifier).findMember(widget.userId);
+      member = ref.read(membersProvider.notifier).findMember(widget.memberId);
       lastChangedUser = ref.read(usersProvider.notifier).findUser(member!.lastChangeUsreId!);
-
     }
     void Submit() async {
       if (_form.currentState!.validate()) {

@@ -3,12 +3,13 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:misaghe_noor/Screens/meetings.dart';
 import 'package:misaghe_noor/Screens/members.dart';
+import 'package:misaghe_noor/data/dummy_activity.dart';
 import 'package:misaghe_noor/data/dummy_meeting.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  void save() async {
+  void saveMeeting() async {
     final url = Uri.https(
         'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
         'meetings-list.json');
@@ -22,8 +23,25 @@ class HomeScreen extends StatelessWidget {
             'description': meeting.description,
             'lastChangeUserId': meeting.lastChangeUserId,
             'activityName': meeting.activityName,
-
         },
+        ),
+      );
+
+      print(response.body);
+    }
+  }
+  void saveActivity() async {
+    final url = Uri.https(
+        'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
+        'activities-list.json');
+    for (var activity in dummyActivity) {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(
+          {
+            'name': activity.name,
+          },
         ),
       );
 
@@ -98,7 +116,7 @@ class HomeScreen extends StatelessWidget {
                   height: 70,
                   width: 250,
                   child: ElevatedButton(
-                    onPressed: save,
+                    onPressed: saveActivity,
                     child: const Text('؟؟'),
                   ),
                 ),
