@@ -43,11 +43,11 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
     super.initState();
     _loadItem();
   }
-  void _addMeeting(){
+
+  void _addMeeting() {
     showModalBottomSheet(
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-
         borderRadius: BorderRadius.circular(15.0),
       ),
       context: context,
@@ -55,11 +55,9 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
         return NewActivityScreen();
       },
     );
-
   }
 
   void _loadItem() async {
-
     final url = Uri.https(
         'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
         'activities-list.json');
@@ -97,14 +95,14 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
       firstDate: Jalali(1400, 1),
       lastDate: Jalali(1450, 12),
     );
-    setState(
-      () {
-        if (_selectedDate != null) {
+    if (pickedDate != null) {
+      setState(
+        () {
           _selectedDate =
-              DateTime(pickedDate!.year, pickedDate.month, pickedDate.day);
-        }
-      },
-    );
+              DateTime(pickedDate.year, pickedDate.month, pickedDate.day);
+        },
+      );
+    }
   }
 
   @override
@@ -155,9 +153,12 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                             },
                           );
                         }),
-                    IconButton(onPressed: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> NewActivityScreen()));
-                    }, icon: Icon(Icons.add)),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (ctx) => NewActivityScreen()));
+                        },
+                        icon: Icon(Icons.add)),
                     const SizedBox(
                       width: 80,
                     ),
@@ -172,6 +173,17 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                   ],
                 ),
                 TextFormField(initialValue: isEdit ? meeting?.description : ''),
+                const SizedBox(
+                  height: 8,
+                ),
+                Divider(),
+                Container(
+                  child: Expanded(
+                    child: ListView.builder(itemBuilder: (ctx, index) {
+                      return Container();
+                    }),
+                  ),
+                )
               ],
             ),
           ),
