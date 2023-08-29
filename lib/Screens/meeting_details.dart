@@ -13,6 +13,7 @@ import '../models/meeting.dart';
 import '../models/user.dart';
 import '../provider/meetings_provider.dart';
 import '../provider/users_provider.dart';
+import 'new_activity.dart';
 
 final formatter = intl.DateFormat.yMd();
 
@@ -44,19 +45,21 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
   }
   void _addMeeting(){
     showModalBottomSheet(
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(
+
         borderRadius: BorderRadius.circular(15.0),
       ),
       context: context,
-      useSafeArea: true,
       builder: (ctx) {
-        return const NewMeetingSheet();
+        return NewActivityScreen();
       },
     );
 
   }
 
   void _loadItem() async {
+
     final url = Uri.https(
         'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
         'activities-list.json');
@@ -152,7 +155,9 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                             },
                           );
                         }),
-                    IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+                    IconButton(onPressed: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> NewActivityScreen()));
+                    }, icon: Icon(Icons.add)),
                     const SizedBox(
                       width: 80,
                     ),
