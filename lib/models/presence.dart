@@ -1,20 +1,12 @@
 class Presence {
   Presence({
-    required this.activityId,
+    required this.id,
+    required this.meetingId,
     required this.memberId,
-    required this.enterTime,
-    required this.exitTime,
-    required this.total,
+    required this.time
   });
-
-  final String activityId;
+  final String id;
+  final String meetingId;
   final String memberId;
-  final DateTime enterTime;
-  final DateTime exitTime;
-  final Duration total;
-
-  Duration getTotalTime() {
-    var total = exitTime.difference(enterTime);
-    return total;
-  }
+  late int time;
 }

@@ -5,6 +5,7 @@ import 'package:misaghe_noor/Screens/meetings.dart';
 import 'package:misaghe_noor/Screens/members.dart';
 import 'package:misaghe_noor/data/dummy_activity.dart';
 import 'package:misaghe_noor/data/dummy_meeting.dart';
+import 'package:misaghe_noor/data/dummy_presence.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -41,6 +42,26 @@ class HomeScreen extends StatelessWidget {
         body: json.encode(
           {
             'name': activity.name,
+          },
+        ),
+      );
+
+      print(response.body);
+    }
+  }
+  void savePresence() async {
+    final url = Uri.https(
+        'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
+        'presences-list.json');
+    for (var presence in dummyPresence) {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(
+          {
+            'meetingId': presence.meetingId,
+            'memberId' : presence.memberId,
+            'time' : presence.time,
           },
         ),
       );
@@ -116,8 +137,8 @@ class HomeScreen extends StatelessWidget {
                   height: 70,
                   width: 250,
                   child: ElevatedButton(
-                    onPressed: saveActivity,
-                    child: const Text('؟؟'),
+                    onPressed: savePresence,
+                    child: const Text('saving'),
                   ),
                 ),
               ],

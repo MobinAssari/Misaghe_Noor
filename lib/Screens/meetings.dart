@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:misaghe_noor/Screens/meeting_details.dart';
 import 'package:misaghe_noor/models/meeting.dart';
+import 'package:misaghe_noor/models/presence.dart';
 import 'package:misaghe_noor/provider/meetings_provider.dart';
+import 'package:misaghe_noor/provider/presence_provider.dart';
 
 class MeetingsScreen extends ConsumerStatefulWidget {
   const MeetingsScreen({super.key});
@@ -27,20 +29,44 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
   }
 
   void _loadItem() async {
-    final url = Uri.https(
+    final meetingUrl = Uri.https(
         'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
         'meetings-list.json');
-    final response = await http.get(url);
-    final Map<String, dynamic> listData = json.decode(response.body);
-    final List<Meeting> loadedItems = [];
-    for (final item in listData.entries) {
-      loadedItems.add(Meeting(
+    final meetingResponse = await http.get(meetingUrl);
+    final Map<String, dynamic> meetingListData = json.decode(meetingResponse.body);
+    final List<Meeting> loadedMeetings = [];
+    for (final item in meetingListData.entries) {
+      loadedMeetings.add(
+        Meeting(
           id: item.key,
           activityName: item.value['activityName'],
           date: item.value['date'],
           description: item.value['description'],
-          lastChangeUserId: item.value['lastChangeUserId'],),);
-      ref.read(meetingsProvider.notifier).addMeetings(loadedItems.cast<Meeting>());
+          lastChangeUserId: item.value['lastChangeUserId'],
+        ),
+      );
+      ref
+          .read(meetingsProvider.notifier)
+          .addMeetings(loadedMeetings.cast<Meeting>());
+    }
+    final presenceUrl = Uri.https(
+        'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
+        'presences-list.json');
+    final presenceResponse = await http.get(presenceUrl);
+    final Map<String, dynamic> presenceListData = json.decode(presenceResponse.body);
+    final List<Presence> loadedIPresences = [];
+    for (final item in presenceListData.entries) {
+      loadedIPresences.add(
+        Presence(
+          id: item.key,
+          meetingId: item.value['meetingId'],
+          memberId: item.value['memberId'],
+          time: item.value['time'],
+        ),
+      );
+      ref
+          .read(presencesProvider.notifier)
+          .addPresences(loadedIPresences.cast<Presence>());
     }
 
     setState(() {
@@ -54,8 +80,10 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
     if (_isSearching) {
       meetingList = meetingList
           .where((meeting) =>
-      meeting.activityName.trim().contains(searchController.text.trim()) ||
-          meeting.description.trim().contains(searchController.text.trim()))
+              meeting.activityName
+                  .trim()
+                  .contains(searchController.text.trim()) ||
+              meeting.description.trim().contains(searchController.text.trim()))
           .toList();
     }
     Widget mainContent;
@@ -66,7 +94,8 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
         ),
       );
     } else if (meetingList.isEmpty) {
-      mainContent = const Expanded(child: Center(child: Text('هیج جلسه ای یافت نشد!')));
+      mainContent =
+          const Expanded(child: Center(child: Text('هیج جلسه ای یافت نشد!')));
     } else {
       mainContent = Expanded(
         child: ListView.builder(
@@ -76,8 +105,7 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
               children: [
                 ListTile(
                   // leading: const Icon(Icons.supervised_user_circle),
-                  title: Text(
-                      " ${meetingList[index].activityName}"),
+                  title: Text(" ${meetingList[index].activityName}"),
                   trailing: Wrap(
                     children: [
                       IconButton(
@@ -140,7 +168,6 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
       );
     }
 
-
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -172,12 +199,13 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
                 children: [
                   SizedBox(
                       width: 300,
-                      child: TextField(decoration: const InputDecoration(
-                        label: Icon(Icons.search),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blueAccent),
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          label: Icon(Icons.search),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.blueAccent),
+                          ),
                         ),
-                      ),
                         controller: searchController,
                         onChanged: (value) {
                           if (value.trim().isNotEmpty) {
@@ -191,7 +219,6 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
                           }
                         },
                       )),
-
                 ],
               ),
             ),
