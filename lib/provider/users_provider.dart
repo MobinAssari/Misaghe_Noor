@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:misaghe_noor/data/dummy_user.dart';
 import '../models/user.dart';
 
 class UserNotifier extends StateNotifier<List<User>> {

@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:misaghe_noor/models/activity.dart';
 import 'package:misaghe_noor/provider/activity_provider.dart';
+import 'package:misaghe_noor/widgets/presence_widget.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
-
 import '../models/meeting.dart';
 import '../models/user.dart';
 import '../provider/meetings_provider.dart';
@@ -112,7 +111,7 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
       meeting =
           ref.read(meetingsProvider.notifier).findMeeting(widget.meetingId);
       lastChangedUser =
-          ref.read(usersProvider.notifier).findUser(meeting!.lastChangeUserId!);
+          ref.read(usersProvider.notifier).findUser(meeting!.lastChangeUserId);
     }
 
     var activityList = ref.read(activityProvider);
@@ -155,8 +154,13 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                         }),
                     IconButton(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (ctx) => NewActivityScreen()));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (ctx) => NewActivityScreen(),
+
+                            ),
+                          ).then((_) => setState(() {}));
+
                         },
                         icon: Icon(Icons.add)),
                     const SizedBox(
@@ -172,18 +176,13 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                     ),
                   ],
                 ),
-                TextFormField(initialValue: isEdit ? meeting?.description : ''),
+                Container(child: TextFormField(initialValue: isEdit ? meeting?.description : '')),
                 const SizedBox(
                   height: 8,
                 ),
-                Divider(),
-                Container(
-                  child: Expanded(
-                    child: ListView.builder(itemBuilder: (ctx, index) {
-                      return Container();
-                    }),
-                  ),
-                )
+                SizedBox(height: 8,),
+                //Divider(),
+                Container(child: Expanded(child: PresenceItem(isEdit: isEdit,))),
               ],
             ),
           ),

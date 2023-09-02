@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misaghe_noor/Screens/authentication.dart';
-import 'package:misaghe_noor/Screens/home.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));

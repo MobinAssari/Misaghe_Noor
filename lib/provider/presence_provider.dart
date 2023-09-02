@@ -1,6 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:misaghe_noor/models/meeting.dart';
-
 import '../models/presence.dart';
 
 class PresenceNotifier extends StateNotifier<List<Presence>> {

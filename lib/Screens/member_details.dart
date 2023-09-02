@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:misaghe_noor/Screens/authentication.dart';
-import 'package:misaghe_noor/data/dummy_user.dart';
 import 'package:misaghe_noor/models/member.dart';
 import 'package:misaghe_noor/provider/members_provider.dart';
 import 'package:misaghe_noor/provider/users_provider.dart';
