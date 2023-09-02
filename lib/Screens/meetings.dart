@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:misaghe_noor/Screens/meeting_details.dart';
+import 'package:misaghe_noor/loadingFromFireBase.dart';
 import 'package:misaghe_noor/models/meeting.dart';
 import 'package:misaghe_noor/models/presence.dart';
 import 'package:misaghe_noor/provider/meetings_provider.dart';
@@ -20,6 +21,7 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
   bool _isLoading = true;
   bool _isSearching = false;
   TextEditingController searchController = TextEditingController();
+  var loading = LoadingFromFirebase();
 
   @override
   void initState() {
@@ -29,7 +31,7 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
   }
 
   void _loadItem() async {
-    final meetingUrl = Uri.https(
+   /* final meetingUrl = Uri.https(
         'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
         'meetings-list.json');
     final meetingResponse = await http.get(meetingUrl);
@@ -48,7 +50,13 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
       ref
           .read(meetingsProvider.notifier)
           .addMeetings(loadedMeetings.cast<Meeting>());
-    }
+    }*/
+
+    final loadedItems = await loading.loadMeeting();
+    ref.read(meetingsProvider.notifier).addMeetings(loadedItems.cast<Meeting>());
+
+/*
+
     final presenceUrl = Uri.https(
         'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
         'presences-list.json');
@@ -68,6 +76,10 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
           .read(presencesProvider.notifier)
           .addPresences(loadedIPresences.cast<Presence>());
     }
+*/
+
+    final loadedPresences = await loading.loadPresence();
+    ref.read(presencesProvider.notifier).addPresences(loadedPresences.cast<Presence>());
 
     setState(() {
       _isLoading = false;

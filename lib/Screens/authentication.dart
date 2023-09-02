@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misaghe_noor/Screens/home.dart';
+import 'package:misaghe_noor/loadingFromFireBase.dart';
 import 'package:misaghe_noor/models/user.dart';
 import 'package:misaghe_noor/provider/users_provider.dart';
 import 'package:http/http.dart' as http;
@@ -27,7 +28,7 @@ class AuthenticationScreen extends ConsumerWidget {
         print(_enteredPassword);
         print(_enteredEmail);
 
-        final url = Uri.https(
+        /*final url = Uri.https(
             'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
             'users-list.json');
         final response = await http.get(url);
@@ -46,7 +47,10 @@ class AuthenticationScreen extends ConsumerWidget {
           ref
               .read(usersProvider.notifier)
               .addUsers(loadedItems.cast<User>());
-        }
+        }*/
+        var loading = LoadingFromFirebase();
+        final loadedItems = await loading.loadUser();
+        ref.read(usersProvider.notifier).addUsers(loadedItems.cast<User>());
         final userList = ref.watch(usersProvider);
 
         for (var user in userList) {

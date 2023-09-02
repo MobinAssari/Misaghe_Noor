@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:misaghe_noor/Screens/member_details.dart';
+import 'package:misaghe_noor/loadingFromFireBase.dart';
 import 'package:misaghe_noor/models/member.dart';
 import 'package:misaghe_noor/provider/members_provider.dart';
 
@@ -29,7 +30,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
   }
 
   void _loadItem() async {
-    final url = Uri.https(
+    /*final url = Uri.https(
         'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
         'members-list.json');
     final response = await http.get(url);
@@ -54,7 +55,12 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
           mobile: item.value['mobile'],
           lastChangeUsreId: item.value['lastChangeUsreId']));
       ref.read(membersProvider.notifier).addMembers(loadedItems.cast<Member>());
-    }
+    }*/
+    var lFF = LoadingFromFirebase();
+    final loadedItems = await lFF.loadMember();
+    ref.read(membersProvider.notifier).addMembers(loadedItems.cast<Member>());
+
+
 
     setState(() {
       _isLoading = false;

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:misaghe_noor/loadingFromFireBase.dart';
 import 'package:misaghe_noor/models/activity.dart';
 import 'package:misaghe_noor/provider/activity_provider.dart';
 import 'package:misaghe_noor/widgets/presence_widget.dart';
@@ -57,7 +58,7 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
   }
 
   void _loadItem() async {
-    final url = Uri.https(
+    /*final url = Uri.https(
         'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
         'activities-list.json');
     final response = await http.get(url);
@@ -79,7 +80,10 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
       ref
           .read(activityProvider.notifier)
           .addActivities(loadedItems.cast<Activity>());
-    }
+    }*/
+    var loading = LoadingFromFirebase();
+    final loadedItems = await loading.loadActivity();
+    ref.read(activityProvider.notifier).addActivities(loadedItems.cast<Activity>());
     setState(() {
       _isLoading = false;
     });
@@ -182,7 +186,7 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                 ),
                 SizedBox(height: 8,),
                 //Divider(),
-                Container(child: Expanded(child: PresenceItem(isEdit: isEdit,))),
+                Container(child: Expanded(child: PresenceItem(isEdit: isEdit,meetingId: widget.meetingId,))),
               ],
             ),
           ),
