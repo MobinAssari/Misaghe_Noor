@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:misaghe_noor/Screens/member_details.dart';
-import 'package:misaghe_noor/loadingFromFireBase.dart';
+import 'package:misaghe_noor/helper/loadingFromFireBase.dart';
 import 'package:misaghe_noor/models/member.dart';
 import 'package:misaghe_noor/provider/members_provider.dart';
 

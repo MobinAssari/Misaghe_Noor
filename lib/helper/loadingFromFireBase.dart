@@ -5,8 +5,8 @@ import 'package:misaghe_noor/models/activity.dart';
 import 'package:misaghe_noor/models/presence.dart';
 import 'package:misaghe_noor/models/user.dart';
 
-import 'models/meeting.dart';
-import 'models/member.dart';
+import '../models/meeting.dart';
+import '../models/member.dart';
 
 class LoadingFromFirebase {
   Future<List<Member>> loadMember() async {

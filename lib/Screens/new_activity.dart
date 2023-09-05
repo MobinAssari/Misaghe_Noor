@@ -42,6 +42,7 @@ class _NewActivityScreenState extends ConsumerState<NewActivityScreen> {
               name: textController.text.trim(),
             ),
           );
+      textController.text = '';
     }
   }
 

@@ -1,10 +1,8 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:misaghe_noor/loadingFromFireBase.dart';
+import 'package:misaghe_noor/helper/loadingFromFireBase.dart';
 import 'package:misaghe_noor/models/activity.dart';
 import 'package:misaghe_noor/provider/activity_provider.dart';
 import 'package:misaghe_noor/widgets/presence_widget.dart';
@@ -86,7 +84,7 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
     ref.read(activityProvider.notifier).addActivities(loadedItems.cast<Activity>());
     setState(() {
       _isLoading = false;
-    });
+    },);
   }
 
   DateTime? _selectedDate;
@@ -97,6 +95,7 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
       initialDate: Jalali.now(),
       firstDate: Jalali(1400, 1),
       lastDate: Jalali(1450, 12),
+
     );
     if (pickedDate != null) {
       setState(
