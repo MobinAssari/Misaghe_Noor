@@ -44,7 +44,7 @@ class _PresenceItemState extends ConsumerState<PresenceItem> {
         children: [
           Row(
             children: [
-              Spacer(),
+              const Spacer(),
               ElevatedButton(
                   onPressed: () {
                     showTimePicker(
@@ -85,11 +85,12 @@ class _PresenceItemState extends ConsumerState<PresenceItem> {
                         trailing: Wrap(
                           children: [
                             SizedBox(
-                              width: 40,
+                              width: 80,
                               child: TextField(
                                 controller: enterTimeControllers[index],
                                 //editing controller of this TextField
                                 decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
                                     //icon: Icon(Icons.timer), //icon of text field
                                     labelText: "ورود" //label text of field
                                     ),

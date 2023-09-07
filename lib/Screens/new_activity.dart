@@ -48,7 +48,7 @@ class _NewActivityScreenState extends ConsumerState<NewActivityScreen> {
 
   @override
   Widget build(context) {
-    activityList = ref.watch(activityProvider);
+    activityList = ref.watch(activityProvider).reversed.toList();
     return Scaffold(
       appBar: AppBar(title: Text('لیست فعالیت')),
       body: Directionality(

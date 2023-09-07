@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:misaghe_noor/Screens/meeting_details.dart';
+import 'package:misaghe_noor/Screens/presence_screen.dart';
 import 'package:misaghe_noor/helper/loadingFromFireBase.dart';
 import 'package:misaghe_noor/models/meeting.dart';
 import 'package:misaghe_noor/models/presence.dart';
@@ -30,52 +31,9 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
   }
 
   void _loadItem() async {
-   /* final meetingUrl = Uri.https(
-        'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-        'meetings-list.json');
-    final meetingResponse = await http.get(meetingUrl);
-    final Map<String, dynamic> meetingListData = json.decode(meetingResponse.body);
-    final List<Meeting> loadedMeetings = [];
-    for (final item in meetingListData.entries) {
-      loadedMeetings.add(
-        Meeting(
-          id: item.key,
-          activityName: item.value['activityName'],
-          date: item.value['date'],
-          description: item.value['description'],
-          lastChangeUserId: item.value['lastChangeUserId'],
-        ),
-      );
-      ref
-          .read(meetingsProvider.notifier)
-          .addMeetings(loadedMeetings.cast<Meeting>());
-    }*/
 
     final loadedItems = await loading.loadMeeting();
     ref.read(meetingsProvider.notifier).addMeetings(loadedItems.cast<Meeting>());
-
-/*
-
-    final presenceUrl = Uri.https(
-        'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-        'presences-list.json');
-    final presenceResponse = await http.get(presenceUrl);
-    final Map<String, dynamic> presenceListData = json.decode(presenceResponse.body);
-    final List<Presence> loadedIPresences = [];
-    for (final item in presenceListData.entries) {
-      loadedIPresences.add(
-        Presence(
-          id: item.key,
-          meetingId: item.value['meetingId'],
-          memberId: item.value['memberId'],
-          time: item.value['time'],
-        ),
-      );
-      ref
-          .read(presencesProvider.notifier)
-          .addPresences(loadedIPresences.cast<Presence>());
-    }
-*/
 
     final loadedPresences = await loading.loadPresence();
     ref.read(presencesProvider.notifier).addPresences(loadedPresences.cast<Presence>());
@@ -119,6 +77,21 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
                   title: Text(" ${meetingList[index].activityName}"),
                   trailing: Wrap(
                     children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => PresenceScreen(
+                                meetingId: meetingList[index].id,
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.contacts_sharp,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
                       IconButton(
                         onPressed: () {
                           Navigator.of(context).push(

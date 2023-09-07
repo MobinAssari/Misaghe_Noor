@@ -5,7 +5,6 @@ import 'package:intl/intl.dart' as intl;
 import 'package:misaghe_noor/helper/loadingFromFireBase.dart';
 import 'package:misaghe_noor/models/activity.dart';
 import 'package:misaghe_noor/provider/activity_provider.dart';
-import 'package:misaghe_noor/widgets/presence_widget.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../models/meeting.dart';
 import '../models/user.dart';
@@ -42,49 +41,17 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
     _loadItem();
   }
 
-  void _addMeeting() {
-    showModalBottomSheet(
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      context: context,
-      builder: (ctx) {
-        return NewActivityScreen();
-      },
-    );
-  }
-
   void _loadItem() async {
-    /*final url = Uri.https(
-        'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-        'activities-list.json');
-    final response = await http.get(url);
-    if (response.body == 'null') {
-      setState(() {
-        _isLoading = false;
-      });
-      return;
-    }
-    final Map<String, dynamic> listData = json.decode(response.body);
-    final List<Activity> loadedItems = [];
-    for (final item in listData.entries) {
-      loadedItems.add(
-        Activity(
-          id: item.key,
-          name: item.value['name'],
-        ),
-      );
-      ref
-          .read(activityProvider.notifier)
-          .addActivities(loadedItems.cast<Activity>());
-    }*/
     var loading = LoadingFromFirebase();
     final loadedItems = await loading.loadActivity();
-    ref.read(activityProvider.notifier).addActivities(loadedItems.cast<Activity>());
-    setState(() {
-      _isLoading = false;
-    },);
+    ref
+        .read(activityProvider.notifier)
+        .addActivities(loadedItems.cast<Activity>());
+    setState(
+      () {
+        _isLoading = false;
+      },
+    );
   }
 
   DateTime? _selectedDate;
@@ -95,7 +62,6 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
       initialDate: Jalali.now(),
       firstDate: Jalali(1400, 1),
       lastDate: Jalali(1450, 12),
-
     );
     if (pickedDate != null) {
       setState(
@@ -105,6 +71,13 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
         },
       );
     }
+  }
+  bool isSaving = false;
+  void _saving(){
+    setState(() {
+      isSaving = true;
+    });
+
   }
 
   @override
@@ -129,7 +102,7 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
       body: Directionality(
         textDirection: TextDirection.rtl,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
           child: Form(
             child: Column(
               children: [
@@ -157,21 +130,21 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                         }),
                     IconButton(
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (ctx) => NewActivityScreen(),
-
-                            ),
-                          ).then((_) => setState(() {}));
-
+                          Navigator.of(context)
+                              .push(
+                                MaterialPageRoute(
+                                  builder: (ctx) => NewActivityScreen(),
+                                ),
+                              )
+                              .then((_) => setState(() {}));
                         },
-                        icon: Icon(Icons.add)),
+                        icon: const Icon(Icons.add)),
                     const SizedBox(
                       width: 80,
                     ),
                     IconButton(
                         onPressed: _showDatePicker,
-                        icon: Icon(Icons.calendar_month_outlined)),
+                        icon: const Icon(Icons.calendar_month_outlined)),
                     Text(
                       _selectedDate == null
                           ? 'تاریخ جلسه'
@@ -179,13 +152,16 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                     ),
                   ],
                 ),
-                Container(child: TextFormField(initialValue: isEdit ? meeting?.description : '')),
+                TextFormField(initialValue: isEdit ? meeting?.description : ''),
                 const SizedBox(
                   height: 8,
                 ),
-                SizedBox(height: 8,),
-                //Divider(),
-                Container(child: Expanded(child: PresenceItem(isEdit: isEdit,meetingId: widget.meetingId,))),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(onPressed: () {}, child: const Text('ذخیره'))
+                  ],
+                )
               ],
             ),
           ),
