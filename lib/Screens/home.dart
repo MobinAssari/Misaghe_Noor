@@ -19,18 +19,19 @@ class HomeScreen extends StatelessWidget {
         url,
         headers: {'Content-Type': 'application/json'},
         body: json.encode(
-        {
+          {
             'date': meeting.date.toString(),
             'description': meeting.description,
             'lastChangeUserId': meeting.lastChangeUserId,
             'activityName': meeting.activityName,
-        },
+          },
         ),
       );
 
       print(response.body);
     }
   }
+
   void saveActivity() async {
     final url = Uri.https(
         'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
@@ -49,6 +50,7 @@ class HomeScreen extends StatelessWidget {
       print(response.body);
     }
   }
+
   void savePresence() async {
     final url = Uri.https(
         'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
@@ -60,8 +62,8 @@ class HomeScreen extends StatelessWidget {
         body: json.encode(
           {
             'meetingId': presence.meetingId,
-            'memberId' : presence.memberId,
-            'time' : presence.time,
+            'memberId': presence.memberId,
+            'time': presence.time,
           },
         ),
       );
@@ -86,61 +88,120 @@ class HomeScreen extends StatelessWidget {
           ),
           Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 SizedBox(
-                  height: 70,
-                  width: 300,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (ctx) => const MeetingsScreen(),
-                          ),
-                        );
-                      },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(194, 206, 203, 203),),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(50)),
-                        ),
-                      ),
-                    ),
-                    child: const Text('جلسات'),
-                  ),
-                ),
-                SizedBox(
-                  height: 70,
-                  width: 250,
+                  height: 60,
+                  width: MediaQuery.of(context).size.width * 0.7,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (ctx) => MembersScreen(),
+                          builder: (ctx) => const MeetingsScreen(),
                         ),
                       );
                     },
-                    child: const Text('اعضا'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(102, 206, 203, 203),
+                      shape: const RoundedRectangleBorder(
+                        side: BorderSide(
+                            color: Color.fromARGB(255, 188, 148, 84)),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(50),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'جلسات',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'IranYekan',
+                      ),
+                    ),
                   ),
                 ),
+                const Divider(height: 36),
                 SizedBox(
-                  height: 70,
-                  width: 250,
+                  height: 60,
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => const MembersScreen(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(102, 206, 203, 203),
+                      shape: const RoundedRectangleBorder(
+                        side: BorderSide(
+                            color: Color.fromARGB(255, 188, 148, 84)),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(50),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'اعضا',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'IranYekan',
+                      ),
+                    ),
+                  ),
+                ),
+                const Divider(height: 36),
+                SizedBox(
+                  height: 60,
+                  width: MediaQuery.of(context).size.width * 0.7,
                   child: ElevatedButton(
                     onPressed: () {},
-                    child: const Text('گزارشات'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(102, 206, 203, 203),
+                      shape: const RoundedRectangleBorder(
+                        side: BorderSide(
+                            color: Color.fromARGB(255, 188, 148, 84)),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(50),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'گزارشات',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'IranYekan',
+                      ),
+                    ),
                   ),
                 ),
+                const Divider(height: 36),
                 SizedBox(
-                  height: 70,
-                  width: 250,
+                  height: 60,
+                  width: MediaQuery.of(context).size.width * 0.7,
                   child: ElevatedButton(
                     onPressed: savePresence,
-                    child: const Text('saving'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(102, 206, 203, 203),
+                      shape: const RoundedRectangleBorder(
+                        side: BorderSide(
+                            color: Color.fromARGB(255, 188, 148, 84)),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(50),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'کاربران',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'IranYekan',
+                      ),
+                    ),
                   ),
                 ),
+                const Divider(height: 65),
               ],
             ),
           ),
