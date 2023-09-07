@@ -78,6 +78,7 @@ flutter:
     - assets/images/wallpaper9.jpg
 
 
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
@@ -89,7 +90,15 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
+     - family: IranYekan
+       fonts:
+         - asset: assets/fonts/IRANYekanMobileLight.ttf
+           weight: 400
+         - asset: assets/fonts/IRANYekanMobileRegular.ttf
+           weight: 500
+         - asset: assets/fonts/IRANYekanMobileBold.ttf
+           weight: 700
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
