@@ -11,7 +11,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: MaterialApp(debugShowCheckedModeBanner: false,
+      child: MaterialApp(theme: ThemeData(
+
+
+          fontFamily: 'IranYekan',
+        ),
+
+        debugShowCheckedModeBanner: false,
         home: AuthenticationScreen(),
       ),
     );
