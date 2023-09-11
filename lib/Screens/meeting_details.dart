@@ -43,13 +43,10 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
     _loadItem();
 
     if (widget.isEdit) {
-
       meeting =
           ref.read(meetingsProvider.notifier).findMeeting(widget.meetingId);
       descriptionController.text = meeting!.description;
       inputActivity = meeting!.activityName;
-
-
     } else {
       _isLoading = false;
     }
@@ -132,8 +129,7 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
               'activityName': inputActivity,
             },
           ),
-
-        );print(response.statusCode);
+        );
         final Map<String, dynamic> resData = json.decode(response.body);
         meetingId = resData['name'];
       }
@@ -227,11 +223,13 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8,),
+                    SizedBox(
+                      height: 8,
+                    ),
                     TextFormField(
-
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),labelText: 'توضیحات جلسه'),
+                          border: OutlineInputBorder(),
+                          labelText: 'توضیحات جلسه'),
                       //initialValue: isEdit ? meeting?.description : '',
                       controller: descriptionController,
                     ),
@@ -242,7 +240,9 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton(
-                            onPressed: _saving, child: const Text('ذخیره'),),
+                          onPressed: _saving,
+                          child: const Text('ذخیره'),
+                        ),
                       ],
                     )
                   ],

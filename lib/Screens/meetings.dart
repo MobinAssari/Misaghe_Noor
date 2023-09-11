@@ -81,11 +81,13 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
         child: ListView.builder(
           itemCount: meetingList.length,
           itemBuilder: (ctx, index) {
+            DateTime date = DateTime.parse(meetingList[index].date);
             return Column(
               children: [
                 ListTile(
                   // leading: const Icon(Icons.supervised_user_circle),
-                  title: Text(" ${meetingList[index].activityName}"),
+                  title: Text(" ${meetingList[index].activityName}",style: TextStyle(fontSize: 22),),
+                  subtitle: Text(' ${date.year}/${date.month}/${date.day}'),
                   trailing: Wrap(
                     children: [
                       IconButton(
