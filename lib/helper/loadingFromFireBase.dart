@@ -101,6 +101,8 @@ class LoadingFromFirebase {
           meetingId: item.value['meetingId'],
           memberId: item.value['memberId'],
           time: item.value['time'],
+          enter: item.value['enter'],
+          exit: item.value['exit'],
         ),
       );
     }
