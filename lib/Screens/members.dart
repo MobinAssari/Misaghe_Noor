@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -30,32 +29,6 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
   }
 
   void _loadItem() async {
-    /*final url = Uri.https(
-        'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-        'members-list.json');
-    final response = await http.get(url);
-    if (response.body == 'null') {
-      setState(() {
-        _isLoading = false;
-      });
-      return;
-    }
-    final Map<String, dynamic> listData = json.decode(response.body);
-    final List<Member> loadedItems = [];
-    for (final item in listData.entries) {
-      loadedItems.add(Member(
-          id: item.key,
-          name: item.value['name'],
-          family: item.value['family'],
-          fatherName: item.value['fatherName'],
-          meliNumber: item.value['meliNumber'],
-          shenasnameNumber: item.value['shenasnameNumber'],
-          address: item.value['address'],
-          phone: item.value['phone'],
-          mobile: item.value['mobile'],
-          lastChangeUsreId: item.value['lastChangeUsreId']));
-      ref.read(membersProvider.notifier).addMembers(loadedItems.cast<Member>());
-    }*/
     var lFF = LoadingFromFirebase();
     final loadedItems = await lFF.loadMember();
     ref.read(membersProvider.notifier).addMembers(loadedItems.cast<Member>());
@@ -70,7 +43,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
 
   @override
   Widget build(context) {
-    List<Member> memberList = ref.watch(membersProvider);
+    List<Member> memberList = ref.watch(membersProvider).reversed.toList();
     if (_isSearching) {
       memberList = memberList
           .where((member) =>

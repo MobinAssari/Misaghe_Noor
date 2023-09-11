@@ -9,7 +9,7 @@ class Meeting {
   });
   final String id;
   final String activityName;
-  final String date;
+  late final String date;
   final String description;
   final String lastChangeUserId;
 }

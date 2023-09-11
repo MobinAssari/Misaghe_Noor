@@ -28,13 +28,6 @@ class _PresenceScreenState extends ConsumerState<PresenceScreen> {
     super.initState();
     _load();
   }
-
-  List<TextEditingController> enterTimeControllers = [];
-  List<TextEditingController> exitTimeControllers = [];
-  List<TextEditingController> totalTimeControllers = [];
-  List<TimeOfDay?> enterList = [];
-  List<TimeOfDay?> exitList = [];
-
   void _load() async {
     final loadedPresences = await loading.loadPresence();
     ref
@@ -60,106 +53,103 @@ class _PresenceScreenState extends ConsumerState<PresenceScreen> {
       mainContent = const Center(
         child: CircularProgressIndicator(),
       );
-    } else if (presenceList.length == 0) {
-      mainContent = Center(
+    } else if (presenceList.isEmpty) {
+      mainContent = const Center(
         child: Text('هیج داده ای پیدا نشد'),
       );
     } else {
       mainContent = Container(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+        padding: const EdgeInsets.symmetric( horizontal: 12),
         child: ListView.builder(
           itemCount: presenceList.length,
           itemBuilder: (ctx, index) {
-            enterTimeControllers.add(TextEditingController());
-            exitTimeControllers.add(TextEditingController());
-            totalTimeControllers.add(TextEditingController());
-
-            //return Text('data');
             member = ref
                 .read(membersProvider.notifier)
                 .findMember(presenceList[index].memberId);
-            return Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    member == null
-                        ? Container()
-                        : Text(
-                            " ${member!.name} ${member!.family}",
-                            style: const TextStyle(fontSize: 20),
+            return Padding(padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      member == null
+                          ? Container()
+                          : Text(
+                              " ${member!.name} ${member!.family}",
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                    ],
+                  ),
+
+                  Padding(padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10.0)),
                           ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10.0)),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'ورود: ${presenceList[index].enter}',
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 100,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10.0)),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'خروج: ${presenceList[index].exit}',
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 100,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10.0)),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'کل: ${toHourMinute(presenceList[index].time)}',
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (ctx) => PresenceDetailsScreen(
-                              isEdit: false,
-                              presenceId: presenceList[index].id,
+                          child: Center(
+                            child: Text(
+                              'ورود: ${presenceList[index].enter}',
+                              style: const TextStyle(fontSize: 18),
                             ),
                           ),
-                        );
-                      },
-                      icon: const Icon(Icons.edit),
-                      color: Colors.red,
+                        ),
+                        Container(
+                          width: 100,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10.0)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'خروج: ${presenceList[index].exit}',
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 100,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10.0)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'کل: ${toHourMinute(presenceList[index].time)}',
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (ctx) => PresenceDetailsScreen(
+                                  isEdit: false,
+                                  presenceId: presenceList[index].id,
+                                ),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.edit),
+                          color: Colors.red,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                const Divider(color: Colors.black),
-              ],
+                  ),
+                  const Divider(color: Colors.black),
+                ],
+              ),
             );
           },
         ),

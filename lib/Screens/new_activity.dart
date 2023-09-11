@@ -49,100 +49,102 @@ class _NewActivityScreenState extends ConsumerState<NewActivityScreen> {
   @override
   Widget build(context) {
     activityList = ref.watch(activityProvider).reversed.toList();
-    return Scaffold(
-      appBar: AppBar(title: Text('لیست فعالیت')),
-      body: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Column(children: [
-          Padding(
-            padding: EdgeInsets.all(8),
-            child: Row(
-              //mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 250,
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blueAccent),
-                      ),
-                    ),
-                    controller: textController,
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: _saving,
-                  child: Icon(Icons.add),
-                  style: ElevatedButton.styleFrom(
-                    shape: CircleBorder(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Container(
-            child: Expanded(
-              child: ListView.builder(
-                itemCount: activityList.length,
-                itemBuilder: (ctx, index) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        // leading: const Icon(Icons.supervised_user_circle),
-                        title: Text(" ${activityList[index].name}"),
-                        trailing: Wrap(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: AlertDialog(
-                                      content: Text('فعالیت حذف شود؟'),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              final url = Uri.https(
-                                                  'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-                                                  'activities-list/${activityList[index].id}.json');
-                                              http.delete(url);
-                                              ref
-                                                  .read(
-                                                      activityProvider.notifier)
-                                                  .removeActivity(
-                                                      activityList[index]);
-                                              /*activityList
-                                                  .remove(activityList[index]);*/
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text('بله')),
-                                        TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                            child: Text('خیر'))
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                            ),
-                          ],
+    return Directionality(textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(title: Text('لیست فعالیت')),
+        body: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Column(children: [
+            Padding(
+              padding: EdgeInsets.all(8),
+              child: Row(
+                //mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 250,
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blueAccent),
                         ),
                       ),
-                      Divider(),
-                    ],
-                  );
-                },
+                      controller: textController,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: _saving,
+                    child: Icon(Icons.add),
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ]),
+            const SizedBox(
+              height: 8,
+            ),
+            Container(
+              child: Expanded(
+                child: ListView.builder(
+                  itemCount: activityList.length,
+                  itemBuilder: (ctx, index) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          // leading: const Icon(Icons.supervised_user_circle),
+                          title: Text(" ${activityList[index].name}"),
+                          trailing: Wrap(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => Directionality(
+                                      textDirection: TextDirection.rtl,
+                                      child: AlertDialog(
+                                        content: Text('فعالیت حذف شود؟'),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                final url = Uri.https(
+                                                    'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
+                                                    'activities-list/${activityList[index].id}.json');
+                                                http.delete(url);
+                                                ref
+                                                    .read(
+                                                        activityProvider.notifier)
+                                                    .removeActivity(
+                                                        activityList[index]);
+                                                /*activityList
+                                                    .remove(activityList[index]);*/
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('بله')),
+                                          TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: Text('خیر'))
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(Icons.delete, color: Colors.red),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
+          ]),
+        ),
       ),
     );
   }

@@ -10,6 +10,9 @@ import 'package:misaghe_noor/models/presence.dart';
 import 'package:misaghe_noor/provider/meetings_provider.dart';
 import 'package:misaghe_noor/provider/presence_provider.dart';
 
+import '../models/activity.dart';
+import '../provider/activity_provider.dart';
+
 class MeetingsScreen extends ConsumerStatefulWidget {
   const MeetingsScreen({super.key});
 
@@ -31,12 +34,20 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
   }
 
   void _loadItem() async {
-
     final loadedItems = await loading.loadMeeting();
-    ref.read(meetingsProvider.notifier).addMeetings(loadedItems.cast<Meeting>());
+    ref
+        .read(meetingsProvider.notifier)
+        .addMeetings(loadedItems.cast<Meeting>());
 
     final loadedPresences = await loading.loadPresence();
-    ref.read(presencesProvider.notifier).addPresences(loadedPresences.cast<Presence>());
+    ref
+        .read(presencesProvider.notifier)
+        .addPresences(loadedPresences.cast<Presence>());
+
+    final loadedActivities = await loading.loadActivity();
+    ref
+        .read(activityProvider.notifier)
+        .addActivities(loadedActivities.cast<Activity>());
 
     setState(() {
       _isLoading = false;

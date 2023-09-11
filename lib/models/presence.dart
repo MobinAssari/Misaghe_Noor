@@ -8,9 +8,9 @@ class Presence {
     required this.exit
   });
   final String id;
-  final String meetingId;
-  final String memberId;
-  late final  String enter;
-  late final String exit;
+  String meetingId;
+  String memberId;
+  late String enter;
+  late String exit;
   late int time;
 }

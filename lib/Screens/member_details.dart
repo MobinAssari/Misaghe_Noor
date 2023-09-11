@@ -22,7 +22,6 @@ class MemberDetailsScreen extends ConsumerStatefulWidget {
 }
 
 class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
-
   Member? member;
   var isSending = false;
   final _form = GlobalKey<FormState>();
@@ -38,11 +37,11 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
 
   @override
   Widget build(context) {
-    User? enteredUser = ref.read(usersProvider.notifier).findUser(enteredUserId);
     var isEdit = widget.isEdit;
     if (isEdit) {
       member = ref.read(membersProvider.notifier).findMember(widget.memberId);
-      lastChangedUser = ref.read(usersProvider.notifier).findUser(member!.lastChangeUsreId!);
+      lastChangedUser =
+          ref.read(usersProvider.notifier).findUser(member!.lastChangeUsreId!);
     }
     void Submit() async {
       if (_form.currentState!.validate()) {
@@ -64,19 +63,14 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
           },
         );
         final memberId;
-        if(isEdit){
+        if (isEdit) {
           final url = Uri.https(
               'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
               'members-list/${member?.id}.json');
-          http.patch(url,body: myBody );
+          http.patch(url, body: myBody);
           memberId = member?.id;
-          ref
-              .read(membersProvider.notifier)
-              .removeMember(member!);
-
-
-        }
-        else {
+          ref.read(membersProvider.notifier).removeMember(member!);
+        } else {
           final url = Uri.https(
               'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
               'members-list.json');
@@ -85,21 +79,25 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
             headers: {'Content-Type': 'application/json'},
             body: myBody,
           );
+          print(response.statusCode);
+          print(response.body);
+          print(response.headers);
           final Map<String, dynamic> resData = json.decode(response.body);
           memberId = resData['name'];
-
         }
-        ref.read(membersProvider.notifier).addMember(Member(
-            id: memberId,
-            name: inputName,
-            family: inputFamily,
-            fatherName: inputFather,
-            meliNumber: inputMeli,
-            shenasnameNumber: inputShShenasname,
-            address: inputAddress,
-            phone: inputPhone,
-            mobile: inputMobile,
-            lastChangeUsreId: enteredUserId));
+        ref.read(membersProvider.notifier).addMember(
+              Member(
+                  id: memberId,
+                  name: inputName,
+                  family: inputFamily,
+                  fatherName: inputFather,
+                  meliNumber: inputMeli,
+                  shenasnameNumber: inputShShenasname,
+                  address: inputAddress,
+                  phone: inputPhone,
+                  mobile: inputMobile,
+                  lastChangeUsreId: enteredUserId),
+            );
         Navigator.of(context).pop();
       }
     }
@@ -259,8 +257,16 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
                               },
                         child: const Text('ذخیره'),
                       ),
-                      isEdit ? lastChangedUser!.id.isEmpty ? SizedBox(width: 1,) : Text(
-                          ' آخرین تغییر توسط ${lastChangedUser!.name} ${lastChangedUser!.family}') : SizedBox(width: 1,),
+                      isEdit
+                          ? lastChangedUser!.id.isEmpty
+                              ? SizedBox(
+                                  width: 1,
+                                )
+                              : Text(
+                                  ' آخرین تغییر توسط ${lastChangedUser!.name} ${lastChangedUser!.family}')
+                          : SizedBox(
+                              width: 1,
+                            ),
                     ],
                   ),
                 ),
