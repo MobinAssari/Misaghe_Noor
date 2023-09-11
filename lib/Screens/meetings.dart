@@ -132,8 +132,8 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
                                       onPressed: () {
                                         final url = Uri.https(
                                             'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-                                            'members-list/${meetingList[index].id}.json');
-                                        http.delete(url);
+                                            'meetings-list/${meetingList[index].id}.json');
+                                        var response = http.delete(url);
 
                                         ref
                                             .read(meetingsProvider.notifier)
