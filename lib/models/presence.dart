@@ -4,13 +4,13 @@ class Presence {
     required this.meetingId,
     required this.memberId,
     required this.time,
-    this.enter = '',
-    this.exit = ''
+    required this.enter,
+    required this.exit
   });
   final String id;
   final String meetingId;
   final String memberId;
-  late  String enter;
-  late String exit;
+  late final  String enter;
+  late final String exit;
   late int time;
 }

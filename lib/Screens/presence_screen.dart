@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:misaghe_noor/Screens/presence_details.dart';
 import 'package:misaghe_noor/provider/presence_provider.dart';
 import '../helper/loadingFromFireBase.dart';
 import '../models/member.dart';
@@ -9,6 +10,7 @@ import '../provider/members_provider.dart';
 
 class PresenceScreen extends ConsumerStatefulWidget {
   const PresenceScreen({super.key, required this.meetingId});
+
   final String meetingId;
 
   @override
@@ -58,9 +60,13 @@ class _PresenceScreenState extends ConsumerState<PresenceScreen> {
       mainContent = const Center(
         child: CircularProgressIndicator(),
       );
+    } else if (presenceList.length == 0) {
+      mainContent = Center(
+        child: Text('هیج داده ای پیدا نشد'),
+      );
     } else {
       mainContent = Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
         child: ListView.builder(
           itemCount: presenceList.length,
           itemBuilder: (ctx, index) {
@@ -72,147 +78,88 @@ class _PresenceScreenState extends ConsumerState<PresenceScreen> {
             member = ref
                 .read(membersProvider.notifier)
                 .findMember(presenceList[index].memberId);
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      member == null
-                          ? Container()
-                          : Text(
-                              " ${member!.name} ${member!.family}",
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                    ],
-                  ),
-                  ListTile(
-                    trailing: Wrap(
-                      children: [
-                        SizedBox(
-                          width: 80,
-                          height: 50,
-                          child: TextField(
+            return Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    member == null
+                        ? Container()
+                        : Text(
+                            " ${member!.name} ${member!.family}",
                             style: const TextStyle(fontSize: 20),
-                            controller: enterTimeControllers[index],
-                            //editing controller of this TextField
-                            decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                //icon: Icon(Icons.timer), //icon of text field
-                                labelText: "ورود" //label text of field
-                                ),
-                            readOnly: true,
-                            //set it true, so that user will not able to edit text
-                            onTap: () async {
-                              if (enterList.length == index) {
-                                enterList.add(await showTimePicker(
-                                  initialTime: TimeOfDay.now(),
-                                  context: context,
-                                ));
-                              } else {
-                                enterList[index] = await showTimePicker(
-                                  initialTime: TimeOfDay.now(),
-                                  context: context,
-                                );
-                              }
-                              if (enterList[index] != null) {
-                                setState(() {
-                                  presenceList[index].enter =
-                                      "${enterList[index]!.hour}:${enterList[index]!.minute}";
-                                  enterTimeControllers[index].text =
-                                      presenceList[index].enter;
-                                  //set the value of text field.
-                                  if (enterList[index] != null &&
-                                      exitList[index] != null) {
-                                    totalTimeControllers[index]
-                                        .text = calculateDuration(
-                                            enterList[index], exitList[index])
-                                        .toString();
-                                  }
-                                });
-                              }
-                            },
                           ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10.0)),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'ورود: ${presenceList[index].enter}',
+                          style: const TextStyle(fontSize: 18),
                         ),
-                        const SizedBox(
-                          width: 6,
-                        ),
-                        SizedBox(
-                          width: 80,
-                          height: 50,
-                          child: TextField(
-                            style: const TextStyle(fontSize: 20),
-                            controller: exitTimeControllers[index],
-                            //editing controller of this TextField
-                            decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                //icon: Icon(Icons.timer), //icon of text field
-                                labelText: "خروج" //label text of field
-                                ),
-                            readOnly: true,
-                            //set it true, so that user will not able to edit text
-                            onTap: () async {
-                              if (exitList.length == index) {
-                                exitList.add(await showTimePicker(
-                                  initialTime: TimeOfDay.now(),
-                                  context: context,
-                                ));
-                              } else {
-                                exitList[index] = await showTimePicker(
-                                  initialTime: TimeOfDay.now(),
-                                  context: context,
-                                );
-                              }
-                              if (exitList[index] != null) {
-                                setState(() {
-                                  presenceList[index].exit =
-                                      "${exitList[index]!.hour}:${exitList[index]!.minute}";
-                                  exitTimeControllers[index].text =
-                                      presenceList[index].exit;
-                                  if (enterList[index] != null &&
-                                      exitList[index] != null) {
-                                    totalTimeControllers[index]
-                                        .text = calculateDuration(
-                                            enterList[index], exitList[index])
-                                        .toString();
-                                  }
-                                });
-                              } else {
-                              }
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          width: 90,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            border: Border.all(),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          child: Center(
-                            child: Text(
-                              totalTimeControllers[index].text.isNotEmpty
-                                  ? 'کل: ${toHourMinute(int.parse(totalTimeControllers[index].text),)}'
-                                  : 'کل: ',
-                              style: const TextStyle(fontSize: 18),
-                              //'کل: ${toHourMinute(int.parse(totalTimeControllers[index].text))}' ?? '',style: TextStyle(fontSize: 16)
-
-                              //set it true, so that user will not able to edit text
-                            ),
-                          ),
-                        ),
-                        //             IconButton(onPressed: (){}, icon: Icon(Icons.check,color: Colors.greenAccent,),)
-                      ],
+                      ),
                     ),
-                  ),
-                  const Divider(color: Colors.black),
-                ],
-              ),
+                    Container(
+                      width: 100,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10.0)),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'خروج: ${presenceList[index].exit}',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 100,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10.0)),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'کل: ${toHourMinute(presenceList[index].time)}',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => PresenceDetailsScreen(
+                              isEdit: false,
+                              presenceId: presenceList[index].id,
+                            ),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.edit),
+                      color: Colors.red,
+                    ),
+                  ],
+                ),
+                const Divider(color: Colors.black),
+              ],
             );
           },
         ),
@@ -223,6 +170,18 @@ class _PresenceScreenState extends ConsumerState<PresenceScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('لیست حضور و غیاب'),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) =>
+                          const PresenceDetailsScreen(isEdit: false),
+                    ),
+                  );
+                },
+                icon: const Icon(CupertinoIcons.add))
+          ],
         ),
         body: mainContent,
       ),
