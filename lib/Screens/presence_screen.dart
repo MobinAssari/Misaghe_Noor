@@ -28,6 +28,7 @@ class _PresenceScreenState extends ConsumerState<PresenceScreen> {
     super.initState();
     _load();
   }
+
   void _load() async {
     final loadedPresences = await loading.loadPresence();
     ref
@@ -45,6 +46,7 @@ class _PresenceScreenState extends ConsumerState<PresenceScreen> {
   Widget build(BuildContext context) {
     presenceList = ref
         .watch(presencesProvider)
+        .reversed
         .where((element) => element.meetingId == widget.meetingId)
         .toList();
     Member? member;
@@ -59,96 +61,119 @@ class _PresenceScreenState extends ConsumerState<PresenceScreen> {
       );
     } else {
       mainContent = Container(
-        padding: const EdgeInsets.symmetric( horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         child: ListView.builder(
           itemCount: presenceList.length,
           itemBuilder: (ctx, index) {
             member = ref
                 .read(membersProvider.notifier)
                 .findMember(presenceList[index].memberId);
-            return Padding(padding: const EdgeInsets.symmetric(vertical: 2),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      member == null
-                          ? Container()
-                          : Text(
-                              " ${member!.name} ${member!.family}",
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                    ],
-                  ),
-
-                  Padding(padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) => PresenceDetailsScreen(
+                        isEdit: false,
+                        presenceId: presenceList[index].id,
+                      ),
+                    ),
+                  );
+                },
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Container(
-                          width: 100,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            border: Border.all(),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'ورود: ${presenceList[index].enter}',
-                              style: const TextStyle(fontSize: 18),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 100,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            border: Border.all(),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'خروج: ${presenceList[index].exit}',
-                              style: const TextStyle(fontSize: 18),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 100,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            border: Border.all(),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'کل: ${toHourMinute(presenceList[index].time)}',
-                              style: const TextStyle(fontSize: 18),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (ctx) => PresenceDetailsScreen(
-                                  isEdit: false,
-                                  presenceId: presenceList[index].id,
-                                ),
+                        member == null
+                            ? Container()
+                            : Text(
+                                " ${member!.name} ${member!.family}",
+                                style: const TextStyle(fontSize: 20),
                               ),
-                            );
-                          },
-                          icon: const Icon(Icons.edit),
-                          color: Colors.red,
-                        ),
                       ],
                     ),
-                  ),
-                  const Divider(color: Colors.black),
-                ],
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: 100,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color.fromARGB(80, 0, 0, 0),
+                              ),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'ورود: ${presenceList[index].enter}',
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 100,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color.fromARGB(80, 0, 0, 0),
+                              ),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'خروج: ${presenceList[index].exit}',
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 100,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color.fromARGB(80, 0, 0, 0),
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10.0),
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'کل: ${toHourMinute(presenceList[index].time)}',
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                            ),
+                          ),
+                          /*IconButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (ctx) => PresenceDetailsScreen(
+                                    isEdit: false,
+                                    presenceId: presenceList[index].id,
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.edit),
+                            color: Colors.red,
+                          ),*/
+                        ],
+                      ),
+                    ),
+                    const Divider(color: Colors.black),
+                  ],
+                ),
               ),
             );
           },
@@ -165,8 +190,10 @@ class _PresenceScreenState extends ConsumerState<PresenceScreen> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (ctx) =>
-                          const PresenceDetailsScreen(isEdit: false),
+                      builder: (ctx) => PresenceDetailsScreen(
+                        isEdit: false,
+                        meetingId: widget.meetingId,
+                      ),
                     ),
                   );
                 },
