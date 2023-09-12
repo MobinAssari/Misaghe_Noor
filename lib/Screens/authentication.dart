@@ -138,14 +138,16 @@ class _AuthenticationScreenState extends ConsumerState<AuthenticationScreen> {
                         const SizedBox(
                           height: 16,
                         ),
-                        ElevatedButton(
-                          onPressed: isLoading ? (){} : submit,
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 191, 191, 203)),
-                          child: isLoading ? const CircularProgressIndicator() : const Text(
-                            'ورود',
-                            style: TextStyle(color: Colors.black),
+                        SizedBox(width: 100,height: 50,
+                          child: ElevatedButton(
+                            onPressed: isLoading ? (){} : submit,
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 191, 191, 203)),
+                            child: isLoading ? const CircularProgressIndicator() : const Text(
+                              'ورود',
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                         ),
                       ],

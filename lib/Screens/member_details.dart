@@ -102,175 +102,192 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
       }
     }
 
-    return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
-        child: Form(
-          key: _form,
-          child: Directionality(
-            textDirection: TextDirection.rtl,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          title: Text('مشخصات عضو'),
+        ),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.only(
+              top: 0, bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Form(
+              key: _form,
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: TextFormField(
-                        initialValue: isEdit ? member?.name : '',
-                        decoration: const InputDecoration(
-                          label: Text('نام'),
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) return "لطفا نام را وارد کنید";
-                          return null;
-                        },
-                        onSaved: (value) => inputName = value!,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 24,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        initialValue: isEdit ? member?.family : '',
-                        decoration: const InputDecoration(
-                          label: Text('نام خانوادگی'),
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty)
-                            return "لطفا نام خانوادگی را وارد کنید";
-                          return null;
-                        },
-                        onSaved: (value) => inputFamily = value!,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                SizedBox(
-                  width: 160,
-                  child: TextFormField(
-                    initialValue: isEdit ? member?.fatherName : '',
-                    decoration: const InputDecoration(
-                      label: Text('نام پدر'),
-                    ),
-                    validator: (value) {
-                      if (value!.isEmpty) return "لطفا نام پدر را وارد کنید";
-                      return null;
-                    },
-                    onSaved: (value) => inputFather = value!,
-                  ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        initialValue: isEdit ? member?.meliNumber : '',
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          label: Text('کد ملی'),
-                        ),
-                        onSaved: (value) => inputMeli = value!,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 24,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        initialValue: isEdit ? member?.shenasnameNumber : '',
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          label: Text('شماره شناسنامه'),
-                        ),
-                        onSaved: (value) => inputShShenasname = value!,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        initialValue: isEdit ? member?.phone : '',
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          label: Text('شماره تلفن'),
-                        ),
-                        onSaved: (value) => inputPhone = value!,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 24,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        initialValue: isEdit ? member?.mobile : '',
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          label: Text('شماره همراه'),
-                        ),
-                        onSaved: (value) => inputMobile = value!,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                SizedBox(
-                  child: TextFormField(
-                    initialValue: isEdit ? member?.address : '',
-                    decoration: const InputDecoration(
-                      label: Text('آدرس'),
-                    ),
-                    onSaved: (value) => inputAddress = value!,
-                  ),
-                ),
-                // SizedBox(height: 24,),
-                Expanded(
-                  child: Row(
-                    children: [
-                      ElevatedButton(
-                          onPressed: () =>
-                              isSending ? null : Navigator.of(context).pop(),
-                          child: const Text('لغو')),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      ElevatedButton(
-                        onPressed: isSending
-                            ? null
-                            : () {
-                                Submit();
-                              },
-                        child: const Text('ذخیره'),
-                      ),
-                      isEdit
-                          ? lastChangedUser!.id.isEmpty
-                              ? SizedBox(
-                                  width: 1,
-                                )
-                              : Text(
-                                  ' آخرین تغییر توسط ${lastChangedUser!.name} ${lastChangedUser!.family}')
-                          : SizedBox(
-                              width: 1,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            initialValue: isEdit ? member?.name : '',
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              label: Text('نام'),
                             ),
-                    ],
-                  ),
+                            validator: (value) {
+                              if (value!.isEmpty) return "لطفا نام را وارد کنید";
+                              return null;
+                            },
+                            onSaved: (value) => inputName = value!,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 24,
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            initialValue: isEdit ? member?.family : '',
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              label: Text('نام خانوادگی'),
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty)
+                                return "لطفا نام خانوادگی را وارد کنید";
+                              return null;
+                            },
+                            onSaved: (value) => inputFamily = value!,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    SizedBox(
+                      width: 160,
+                      child: TextFormField(
+                        initialValue: isEdit ? member?.fatherName : '',
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          label: Text('نام پدر'),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) return "لطفا نام پدر را وارد کنید";
+                          return null;
+                        },
+                        onSaved: (value) => inputFather = value!,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            initialValue: isEdit ? member?.meliNumber : '',
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              label: Text('کد ملی'),
+                            ),
+                            onSaved: (value) => inputMeli = value!,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 24,
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            initialValue: isEdit ? member?.shenasnameNumber : '',
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              label: Text('شماره شناسنامه'),
+                            ),
+                            onSaved: (value) => inputShShenasname = value!,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            initialValue: isEdit ? member?.phone : '',
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              label: Text('شماره تلفن'),
+                            ),
+                            onSaved: (value) => inputPhone = value!,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 24,
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            initialValue: isEdit ? member?.mobile : '',
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              label: Text('شماره همراه'),
+                            ),
+                            onSaved: (value) => inputMobile = value!,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    SizedBox(
+                      child: TextFormField( maxLines: 10, minLines: null,
+                        initialValue: isEdit ? member?.address : '',
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          label: Text('آدرس'),
+                        ),
+                        onSaved: (value) => inputAddress = value!,
+                      ),
+                    ),
+                    // SizedBox(height: 24,),
+                    Row(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () =>
+                                isSending ? null : Navigator.of(context).pop(),
+                            child: const Text('لغو'),),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        ElevatedButton(
+                          onPressed: isSending
+                              ? null
+                              : () {
+                                  Submit();
+                                },
+                          child: const Text('ذخیره'),
+                        ),
+                        isEdit
+                            ? lastChangedUser!.id.isEmpty
+                                ? const SizedBox(
+                                    width: 1,
+                                  )
+                                : Text(
+                                    ' آخرین تغییر توسط ${lastChangedUser!.name} ${lastChangedUser!.family}',
+                                  )
+                            : const SizedBox(
+                                width: 1,
+                              ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

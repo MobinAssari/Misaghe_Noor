@@ -61,9 +61,12 @@ class HomeScreen extends StatelessWidget {
         headers: {'Content-Type': 'application/json'},
         body: json.encode(
           {
+
             'meetingId': presence.meetingId,
             'memberId': presence.memberId,
             'time': presence.time,
+            'enter' : presence.enter,
+            'exit': presence.exit,
           },
         ),
       );
@@ -128,7 +131,7 @@ class HomeScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (ctx) => const MembersScreen(),
+                          builder: (ctx) => const MembersScreen(picking: false,),
                         ),
                       );
                     },
