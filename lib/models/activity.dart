@@ -1,9 +1,9 @@
-import 'package:uuid/uuid.dart';
-
-Uuid uuid = const Uuid();
 class Activity {
   Activity({required this.id, required this.name, });
-  final String id;
-  final String name;
-
+   late String id;
+   late String name;
+  Activity.fromJson(dynamic json){
+    name = json['name'];
+    id = json["id"];
+  }
 }

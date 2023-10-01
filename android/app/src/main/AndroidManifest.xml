@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
     <application
-        android:label="misaghe_noor"
+        android:label="حضور و غیاب میثاق نور"
+        android:usesCleartextTraffic="true"
+        android:hardwareAccelerated="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

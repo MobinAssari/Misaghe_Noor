@@ -1,16 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:misaghe_noor/Screens/meeting_details.dart';
 import 'package:misaghe_noor/Screens/presence_screen.dart';
-import 'package:misaghe_noor/helper/loadingFromFireBase.dart';
+import 'package:misaghe_noor/helper/ConnectToDataBase.dart';
 import 'package:misaghe_noor/models/meeting.dart';
-import 'package:misaghe_noor/models/presence.dart';
 import 'package:misaghe_noor/provider/meetings_provider.dart';
 import 'package:misaghe_noor/provider/presence_provider.dart';
 
 import '../models/activity.dart';
+import '../models/presence.dart';
 import '../provider/activity_provider.dart';
 
 class MeetingsScreen extends ConsumerStatefulWidget {
@@ -24,7 +22,7 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
   bool _isLoading = true;
   bool _isSearching = false;
   TextEditingController searchController = TextEditingController();
-  var loading = LoadingFromFirebase();
+  var loading = ConnectToDataBase();
 
   @override
   void initState() {
@@ -34,6 +32,7 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
   }
 
   void _loadItem() async {
+
     final loadedItems = await loading.loadMeeting();
     ref
         .read(meetingsProvider.notifier)
@@ -44,10 +43,12 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
         .read(presencesProvider.notifier)
         .addPresences(loadedPresences.cast<Presence>());
 
+
     final loadedActivities = await loading.loadActivity();
     ref
         .read(activityProvider.notifier)
         .addActivities(loadedActivities.cast<Activity>());
+
 
     setState(() {
       _isLoading = false;
@@ -60,10 +61,10 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
     if (_isSearching) {
       meetingList = meetingList
           .where((meeting) =>
-              meeting.activityName
+              meeting.activityName!
                   .trim()
                   .contains(searchController.text.trim()) ||
-              meeting.description.trim().contains(searchController.text.trim()))
+              meeting.description!.trim().contains(searchController.text.trim()))
           .toList();
     }
     Widget mainContent;
@@ -81,7 +82,7 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
         child: ListView.builder(
           itemCount: meetingList.length,
           itemBuilder: (ctx, index) {
-            DateTime date = DateTime.parse(meetingList[index].date);
+            DateTime date = DateTime.parse(meetingList[index].date!);
             return Column(
               children: [
                 ListTile(
@@ -121,7 +122,7 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
                           color: Colors.greenAccent,
                         ),
                       ),
-                      IconButton(
+                      /*IconButton(
                         onPressed: () {
                           showDialog(
                             context: context,
@@ -153,11 +154,11 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
                           );
                         },
                         icon: const Icon(Icons.delete, color: Colors.red),
-                      ),
+                      ),*/
                     ],
                   ),
                 ),
-                Divider(),
+                const Divider(),
               ],
             );
           },

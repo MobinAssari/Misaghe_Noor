@@ -7,10 +7,19 @@ class Presence {
     required this.enter,
     required this.exit
   });
-  final String id;
-  String meetingId;
-  String memberId;
-  late String enter;
-  late String exit;
-  late int time;
+  late String id;
+  late String? meetingId;
+  late String? memberId;
+  late String? enter;
+  late String? exit;
+  late int? time;
+
+  Presence.fromJson(Map<String, dynamic> json){
+    id = json['id'];
+    meetingId = json['meetingId'];
+    memberId = json['memberId'];
+    enter = json['enter'];
+    exit = json['exit'];
+    time = json['time'];
+  }
 }

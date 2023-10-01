@@ -1,9 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:http/http.dart' as http;
 import 'package:misaghe_noor/Screens/authentication.dart';
+import 'package:misaghe_noor/helper/ConnectToDataBase.dart';
 import 'package:misaghe_noor/models/activity.dart';
 import 'package:misaghe_noor/provider/activity_provider.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
@@ -28,6 +27,7 @@ class MeetingDetailsScreen extends ConsumerStatefulWidget {
 }
 
 class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
+  bool _isSaving = false;
   bool _isLoading = true;
   Meeting? meeting;
   User? lastChangedUser;
@@ -45,8 +45,8 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
     if (widget.isEdit) {
       meeting =
           ref.read(meetingsProvider.notifier).findMeeting(widget.meetingId);
-      descriptionController.text = meeting!.description;
-      inputActivity = meeting!.activityName;
+      descriptionController.text = meeting!.description!;
+      inputActivity = meeting!.activityName!;
     } else {
       _isLoading = false;
     }
@@ -80,23 +80,27 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
         () {
           _selectedDate =
               DateTime(pickedDate.year, pickedDate.month, pickedDate.day);
-          meeting!.date = _selectedDate.toString();
         },
       );
+      meeting!.date = _selectedDate.toString();
     }
   }
-
-  bool isSaving = false;
 
   void _saving() async {
     if (inputActivity.isNotEmpty &&
         descriptionController.text.isNotEmpty &&
         _selectedDate != null) {
       setState(() {
-        isSaving = true;
+        _isSaving = true;
       });
       if (widget.isEdit) {
-        final url = Uri.https(
+        connectToDataBase.patchMeeting(Meeting(
+            id: meeting!.id,
+            activityName: inputActivity,
+            date: _selectedDate.toString(),
+            description: descriptionController.text,
+            lastChangeUserId: enteredUserId));
+        /*final url = Uri.https(
             'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
             'meetings-list/${meeting?.id}.json');
         final response = await http.patch(
@@ -110,11 +114,17 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
               'activityName': inputActivity,
             },
           ),
-        );
+        );*/
         ref.read(meetingsProvider.notifier).removeMeeting(meeting!);
         meetingId = meeting!.id;
       } else {
-        final url = Uri.https(
+        meetingId = await connectToDataBase.postMeeting(Meeting(
+            id: '',
+            activityName: inputActivity,
+            date: _selectedDate.toString(),
+            description: descriptionController.text,
+            lastChangeUserId: enteredUserId));
+        /*final url = Uri.https(
             'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
             'meetings-list.json');
 
@@ -129,9 +139,7 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
               'activityName': inputActivity,
             },
           ),
-        );
-        final Map<String, dynamic> resData = json.decode(response.body);
-        meetingId = resData['name'];
+        );*/
       }
 
       ref.read(meetingsProvider.notifier).addMeeting(Meeting(
@@ -150,10 +158,10 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
     var isEdit = widget.isEdit;
 
     if (isEdit) {
-      _selectedDate = DateTime.tryParse(meeting!.date);
+      _selectedDate = DateTime.tryParse(meeting!.date!);
 
       lastChangedUser =
-          ref.read(usersProvider.notifier).findUser(meeting!.lastChangeUserId);
+          ref.read(usersProvider.notifier).findUser(meeting!.lastChangeUserId!);
     }
 
     if (_isLoading) {
@@ -240,8 +248,15 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton(
-                          onPressed: _saving,
-                          child: const Text('ذخیره'),
+                          onPressed: _isSaving ? () {} : _saving,
+                          child: _isSaving
+                              ? const SizedBox(
+                                  height: 50.0,
+                                  width: 50.0,
+                                  child: Center(
+                                      child: CircularProgressIndicator(     valueColor:  AlwaysStoppedAnimation<Color>(Colors.white),
+                                      )))
+                              : const Text('ذخیره'),
                         ),
                       ],
                     )

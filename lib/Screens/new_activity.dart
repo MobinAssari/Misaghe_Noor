@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:misaghe_noor/helper/ConnectToDataBase.dart';
 import 'package:misaghe_noor/provider/activity_provider.dart';
 
 import '../models/activity.dart';
@@ -17,11 +15,12 @@ class NewActivityScreen extends ConsumerStatefulWidget {
 class _NewActivityScreenState extends ConsumerState<NewActivityScreen> {
   List<Activity> activityList = [];
   var textController = TextEditingController();
-  String userId = '';
+  String activityId = '';
 
   void _saving() async {
     if (textController.text.trim().isNotEmpty) {
-      final url = Uri.https(
+      activityId = await connectToDataBase.postActivity(textController.text.trim()) as dynamic;
+ /*     final url = Uri.https(
           'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
           'activities-list.json');
 
@@ -33,12 +32,13 @@ class _NewActivityScreenState extends ConsumerState<NewActivityScreen> {
             'name': textController.text.trim(),
           },
         ),
-      );
-      final Map<String, dynamic> resData = json.decode(response.body);
-      userId = resData['name'];
+      );*/
+
+      //final Map<String, dynamic> resData = json.decode(response.data);
+      //userId = response['id'];
       ref.read(activityProvider.notifier).addActivity(
             Activity(
-              id: userId,
+              id: activityId,
               name: textController.text.trim(),
             ),
           );
@@ -74,10 +74,10 @@ class _NewActivityScreenState extends ConsumerState<NewActivityScreen> {
                   ),
                   ElevatedButton(
                     onPressed: _saving,
-                    child: Icon(Icons.add),
                     style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
+                      shape: const CircleBorder(),
                     ),
+                    child: const Icon(Icons.add),
                   ),
                 ],
               ),
@@ -108,10 +108,11 @@ class _NewActivityScreenState extends ConsumerState<NewActivityScreen> {
                                         actions: [
                                           TextButton(
                                               onPressed: () {
-                                                final url = Uri.https(
+                                                connectToDataBase.removeActivity(activityList[index].id);
+                                                /*final url = Uri.https(
                                                     'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
                                                     'activities-list/${activityList[index].id}.json');
-                                                http.delete(url);
+                                                http.delete(url);*/
                                                 ref
                                                     .read(
                                                         activityProvider.notifier)
@@ -121,11 +122,11 @@ class _NewActivityScreenState extends ConsumerState<NewActivityScreen> {
                                                     .remove(activityList[index]);*/
                                                 Navigator.pop(context);
                                               },
-                                              child: Text('بله')),
+                                              child: const Text('بله')),
                                           TextButton(
                                               onPressed: () =>
                                                   Navigator.pop(context),
-                                              child: Text('خیر'))
+                                              child: const Text('خیر'))
                                         ],
                                       ),
                                     ),

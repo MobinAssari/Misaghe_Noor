@@ -7,9 +7,17 @@ class Meeting {
     required this.description,
     required this.lastChangeUserId
   });
-  final String id;
-  final String activityName;
-  late final String date;
-  final String description;
-  final String lastChangeUserId;
+  late String id;
+  late String? activityName;
+  late String? date;
+  late String? description;
+  late String? lastChangeUserId;
+
+  Meeting.fromJson(Map<String, dynamic> json){
+    id = json['id'];
+    activityName = json['activityName'];
+    date = json['date'];
+    description = json['description'];
+    lastChangeUserId = json['lastChangeUserId'];
+  }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misaghe_noor/Screens/presence_details.dart';
 import 'package:misaghe_noor/provider/presence_provider.dart';
-import '../helper/loadingFromFireBase.dart';
+import '../helper/ConnectToDataBase.dart';
 import '../models/member.dart';
 import '../models/presence.dart';
 import '../provider/members_provider.dart';
@@ -18,7 +18,7 @@ class PresenceScreen extends ConsumerStatefulWidget {
 }
 
 class _PresenceScreenState extends ConsumerState<PresenceScreen> {
-  var loading = LoadingFromFirebase();
+  var loading = ConnectToDataBase();
 
   List<Presence> presenceList = [];
   bool isLoading = true;
@@ -67,7 +67,7 @@ class _PresenceScreenState extends ConsumerState<PresenceScreen> {
           itemBuilder: (ctx, index) {
             member = ref
                 .read(membersProvider.notifier)
-                .findMember(presenceList[index].memberId);
+                .findMember(presenceList[index].memberId!);
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 2),
               child: InkWell(
@@ -94,7 +94,7 @@ class _PresenceScreenState extends ConsumerState<PresenceScreen> {
                               ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 8,
                     ),
                     Padding(
@@ -149,7 +149,7 @@ class _PresenceScreenState extends ConsumerState<PresenceScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                'کل: ${toHourMinute(presenceList[index].time)}',
+                                'کل: ${toHourMinute(presenceList[index].time!)}',
                                 style: const TextStyle(fontSize: 18),
                               ),
                             ),

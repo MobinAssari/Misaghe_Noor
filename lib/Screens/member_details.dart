@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import 'package:misaghe_noor/Screens/authentication.dart';
+import 'package:misaghe_noor/helper/ConnectToDataBase.dart';
 import 'package:misaghe_noor/models/member.dart';
 import 'package:misaghe_noor/provider/members_provider.dart';
 import 'package:misaghe_noor/provider/users_provider.dart';
@@ -34,6 +33,12 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
   var inputMobile = '';
   var inputAddress = '';
   User? lastChangedUser;
+  late String memberId;
+  @override
+  void dispose() {
+
+    super.dispose();
+  }
 
   @override
   Widget build(context) {
@@ -41,7 +46,7 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
     if (isEdit) {
       member = ref.read(membersProvider.notifier).findMember(widget.memberId);
       lastChangedUser =
-          ref.read(usersProvider.notifier).findUser(member!.lastChangeUsreId!);
+          ref.read(usersProvider.notifier).findUser(member!.lastChangedUserId!);
     }
     void Submit() async {
       if (_form.currentState!.validate()) {
@@ -49,7 +54,8 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
           isSending = true;
         });
         _form.currentState!.save();
-        Object myBody = json.encode(
+
+        /*Object myBody = json.encode(
           {
             'name': inputName,
             'family': inputFamily,
@@ -62,28 +68,45 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
             'lastChangeUsreId': enteredUserId,
           },
         );
-        final memberId;
         if (isEdit) {
           final url = Uri.https(
               'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
               'members-list/${member?.id}.json');
-          http.patch(url, body: myBody);
-          memberId = member?.id;
+          http.patch(url, body: myBody);*/
+        if (isEdit) {
+          memberId = member!.id;
+          connectToDataBase.patchMember(Member(
+              id: member!.id,
+              name: inputName,
+              family: inputFather,
+              fatherName: inputFather,
+              meliNumber: inputMeli,
+              shenasnameNumber: inputShShenasname,
+              address: inputAddress,
+              phone: inputPhone,
+              mobile: inputMobile,
+              lastChangedUserId: enteredUserId));
           ref.read(membersProvider.notifier).removeMember(member!);
         } else {
-          final url = Uri.https(
-              'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-              'members-list.json');
-          final response = await http.post(
-            url,
-            headers: {'Content-Type': 'application/json'},
-            body: myBody,
-          );
-          print(response.statusCode);
-          print(response.body);
-          print(response.headers);
-          final Map<String, dynamic> resData = json.decode(response.body);
-          memberId = resData['name'];
+          /*final url = Uri.https(
+            'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
+            'members-list.json');
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: myBody,
+        );*/
+          memberId = await connectToDataBase.postMember(Member(
+              id: '',
+              name: inputName,
+              family: inputFather,
+              fatherName: inputFather,
+              meliNumber: inputMeli,
+              shenasnameNumber: inputShShenasname,
+              address: inputAddress,
+              phone: inputPhone,
+              mobile: inputMobile,
+              lastChangedUserId: enteredUserId));
         }
         ref.read(membersProvider.notifier).addMember(
               Member(
@@ -96,7 +119,7 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
                   address: inputAddress,
                   phone: inputPhone,
                   mobile: inputMobile,
-                  lastChangeUsreId: enteredUserId),
+                  lastChangedUserId: enteredUserId),
             );
         Navigator.of(context).pop();
       }
@@ -104,7 +127,8 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
 
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(resizeToAvoidBottomInset: true,
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: Text('مشخصات عضو'),
         ),
@@ -131,7 +155,8 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
                               label: Text('نام'),
                             ),
                             validator: (value) {
-                              if (value!.isEmpty) return "لطفا نام را وارد کنید";
+                              if (value!.isEmpty)
+                                return "لطفا نام را وارد کنید";
                               return null;
                             },
                             onSaved: (value) => inputName = value!,
@@ -163,13 +188,14 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
                     SizedBox(
                       width: 160,
                       child: TextFormField(
-                        initialValue: isEdit ? member?.fatherName : '',
+                        initialValue: isEdit ? member?.fatherName ?? '' : '',
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           label: Text('نام پدر'),
                         ),
                         validator: (value) {
-                          if (value!.isEmpty) return "لطفا نام پدر را وارد کنید";
+                          if (value!.isEmpty)
+                            return "لطفا نام پدر را وارد کنید";
                           return null;
                         },
                         onSaved: (value) => inputFather = value!,
@@ -197,7 +223,8 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
                         ),
                         Expanded(
                           child: TextFormField(
-                            initialValue: isEdit ? member?.shenasnameNumber : '',
+                            initialValue:
+                                isEdit ? member?.shenasnameNumber : '',
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
@@ -245,7 +272,9 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
                       height: 16,
                     ),
                     SizedBox(
-                      child: TextFormField( maxLines: 10, minLines: null,
+                      child: TextFormField(
+                        maxLines: 10,
+                        minLines: null,
                         initialValue: isEdit ? member?.address : '',
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -258,9 +287,10 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
                     Row(
                       children: [
                         ElevatedButton(
-                            onPressed: () =>
-                                isSending ? null : Navigator.of(context).pop(),
-                            child: const Text('لغو'),),
+                          onPressed: () =>
+                              isSending ? null : Navigator.of(context).pop(),
+                          child: const Text('لغو'),
+                        ),
                         const SizedBox(
                           width: 8,
                         ),

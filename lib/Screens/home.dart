@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:misaghe_noor/Screens/meetings.dart';
 import 'package:misaghe_noor/Screens/members.dart';
+import 'package:misaghe_noor/Screens/usersList.dart';
 import 'package:misaghe_noor/data/dummy_activity.dart';
 import 'package:misaghe_noor/data/dummy_meeting.dart';
 import 'package:misaghe_noor/data/dummy_presence.dart';
@@ -61,11 +62,10 @@ class HomeScreen extends StatelessWidget {
         headers: {'Content-Type': 'application/json'},
         body: json.encode(
           {
-
             'meetingId': presence.meetingId,
             'memberId': presence.memberId,
             'time': presence.time,
-            'enter' : presence.enter,
+            'enter': presence.enter,
             'exit': presence.exit,
           },
         ),
@@ -131,7 +131,9 @@ class HomeScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (ctx) => const MembersScreen(picking: false,),
+                          builder: (ctx) => const MembersScreen(
+                            picking: false,
+                          ),
                         ),
                       );
                     },
@@ -159,6 +161,37 @@ class HomeScreen extends StatelessWidget {
                   height: 60,
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => const UsersListScreen(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(102, 206, 203, 203),
+                      shape: const RoundedRectangleBorder(
+                        side: BorderSide(
+                            color: Color.fromARGB(255, 188, 148, 84)),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(50),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'کاربران',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'IranYekan',
+                      ),
+                    ),
+                  ),
+                ),
+                const Divider(height: 36),
+                SizedBox(
+                  height: 60,
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(102, 206, 203, 203),
@@ -172,31 +205,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                     child: const Text(
                       'گزارشات',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: 'IranYekan',
-                      ),
-                    ),
-                  ),
-                ),
-                const Divider(height: 36),
-                SizedBox(
-                  height: 60,
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  child: ElevatedButton(
-                    onPressed: savePresence,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(102, 206, 203, 203),
-                      shape: const RoundedRectangleBorder(
-                        side: BorderSide(
-                            color: Color.fromARGB(255, 188, 148, 84)),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(50),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      'کاربران',
                       style: TextStyle(
                         fontSize: 20,
                         fontFamily: 'IranYekan',

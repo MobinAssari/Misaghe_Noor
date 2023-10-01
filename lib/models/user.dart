@@ -7,10 +7,19 @@ class User {
       required this.password,
       required this.isAdmin});
 
-  String id;
-  final String name;
-  final String family;
-  final String userName;
-  final String password;
-  final bool isAdmin;
+  late String id;
+  String? name;
+  String? family;
+  String? userName;
+  String? password;
+  bool? isAdmin;
+
+  User.fromJson(Map<String, dynamic> json){
+    id = json['id'].toString();
+    name = json['name'];
+    family = json['family'];
+    userName = json['userName'];
+    password = json['password'];
+    isAdmin = json['isAdmin'];
+  }
 }

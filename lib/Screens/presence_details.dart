@@ -1,9 +1,7 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misaghe_noor/Screens/members.dart';
+import 'package:misaghe_noor/helper/ConnectToDataBase.dart';
 import 'package:misaghe_noor/models/member.dart';
 import 'package:misaghe_noor/models/presence.dart';
 import 'package:misaghe_noor/provider/members_provider.dart';
@@ -33,6 +31,7 @@ class _PresenceDetailsScreenState extends ConsumerState<PresenceDetailsScreen> {
   Presence? presence;
   TimeOfDay? enterTime;
   TimeOfDay? exitTime;
+  late String memberId;
   Member? member;
 
   @override
@@ -50,15 +49,15 @@ class _PresenceDetailsScreenState extends ConsumerState<PresenceDetailsScreen> {
       presence =
           ref.read(presencesProvider.notifier).findPresence(widget.presenceId!);
       member =
-          ref.read(membersProvider.notifier).findMember(presence!.memberId);
+          ref.read(membersProvider.notifier).findMember(presence!.memberId!);
       meetingId = presence!.meetingId;
     }
     if (presence != null) {
-      enterController.text = presence!.enter;
-      exitController.text = presence!.exit;
+      enterController.text = presence!.enter!;
+      exitController.text = presence!.exit!;
       totalText = presence!.time.toString();
       Member? member =
-          ref.read(membersProvider.notifier).findMember(presence!.memberId);
+          ref.read(membersProvider.notifier).findMember(presence!.memberId!);
       if (member != null) {
         nameController.text = "${member.name} ${member.family}";
       }
@@ -75,10 +74,17 @@ class _PresenceDetailsScreenState extends ConsumerState<PresenceDetailsScreen> {
         _isLoading = true;
       });
       if (widget.isEdit) {
-        final url = Uri.https(
+        connectToDataBase.patchPresence(Presence(
+            id: presence!.id,
+            meetingId: presence!.meetingId,
+            memberId: member!.id,
+            time: int.parse(totalText),
+            enter: enterController.text,
+            exit: exitController.text));
+        /*final url = Uri.https(
             'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
             'presences-list/${presence?.id}.json');
-         await http.patch(
+        await http.patch(
           url,
           headers: {'Content-Type': 'application/json'},
           body: json.encode(
@@ -90,11 +96,18 @@ class _PresenceDetailsScreenState extends ConsumerState<PresenceDetailsScreen> {
               'exit': exitController.text,
             },
           ),
-        );
+        );*/
         ref.read(presencesProvider.notifier).removePresence(presence!);
         presenceId = presence!.id;
       } else {
-        final url = Uri.https(
+        presenceId = await connectToDataBase.postPresence(Presence(
+            id: '',
+            meetingId: widget.meetingId,
+            memberId: member!.id,
+            time: int.parse(totalText),
+            enter: enterController.text,
+            exit: exitController.text));
+        /*final url = Uri.https(
             'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
             'presences-list.json');
 
@@ -110,9 +123,7 @@ class _PresenceDetailsScreenState extends ConsumerState<PresenceDetailsScreen> {
               'exit': exitController.text,
             },
           ),
-        );
-        final Map<String, dynamic> resData = json.decode(response.body);
-        presenceId = resData['name'];
+        );*/
       }
 
       ref.read(presencesProvider.notifier).addPresence(Presence(
@@ -126,7 +137,6 @@ class _PresenceDetailsScreenState extends ConsumerState<PresenceDetailsScreen> {
     } else {}
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -153,7 +163,7 @@ class _PresenceDetailsScreenState extends ConsumerState<PresenceDetailsScreen> {
                   readOnly: true,
                   //set it true, so that user will not able to edit text
                   onTap: () async {
-                    var memberId = await Navigator.of(context).push(
+                    memberId = await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (ctx) => const MembersScreen(picking: true),
                       ),
@@ -280,15 +290,21 @@ class _PresenceDetailsScreenState extends ConsumerState<PresenceDetailsScreen> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 Align(
                     alignment: AlignmentDirectional.topEnd,
-                    child: SizedBox(width: 100,height: 50,
+                    child: SizedBox(
+                      width: 100,
+                      height: 50,
                       child: ElevatedButton(
                           onPressed: _isLoading ? () {} : _saving,
-                          child: _isLoading ? const CircularProgressIndicator(color: Colors.white,) : const Text('ذخیره')),
+                          child: _isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : const Text('ذخیره')),
                     )),
               ],
             ),

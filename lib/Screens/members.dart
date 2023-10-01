@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import 'package:misaghe_noor/Screens/member_details.dart';
-import 'package:misaghe_noor/helper/loadingFromFireBase.dart';
+import 'package:misaghe_noor/helper/ConnectToDataBase.dart';
 import 'package:misaghe_noor/models/member.dart';
 import 'package:misaghe_noor/provider/members_provider.dart';
 
@@ -29,7 +28,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
   }
 
   void _loadItem() async {
-    var lFF = LoadingFromFirebase();
+    var lFF = ConnectToDataBase();
     final loadedItems = await lFF.loadMember();
     ref.read(membersProvider.notifier).addMembers(loadedItems.cast<Member>());
 
@@ -98,10 +97,11 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                                   actions: [
                                     TextButton(
                                       onPressed: () {
-                                        final url = Uri.https(
+                                        connectToDataBase.removeMember(memberList[index].id);
+                                        /*final url = Uri.https(
                                             'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
                                             'members-list/${memberList[index].id}.json');
-                                        http.delete(url);
+                                        http.delete(url);*/
                                         ref
                                             .read(membersProvider.notifier)
                                             .removeMember(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misaghe_noor/Screens/home.dart';
-import 'package:misaghe_noor/helper/loadingFromFireBase.dart';
+import 'package:misaghe_noor/helper/ConnectToDataBase.dart';
 import 'package:misaghe_noor/models/user.dart';
 import 'package:misaghe_noor/provider/users_provider.dart';
 
@@ -12,7 +12,8 @@ class AuthenticationScreen extends ConsumerStatefulWidget {
   AuthenticationScreen({super.key});
 
   @override
-  ConsumerState<AuthenticationScreen> createState() => _AuthenticationScreenState();
+  ConsumerState<AuthenticationScreen> createState() =>
+      _AuthenticationScreenState();
 }
 
 class _AuthenticationScreenState extends ConsumerState<AuthenticationScreen> {
@@ -31,19 +32,37 @@ class _AuthenticationScreenState extends ConsumerState<AuthenticationScreen> {
   @override
   Widget build(context) {
     void submit() async {
-      setState(() {
-        isLoading = true;
-      });
+
 
       if (_form.currentState!.validate()) {
+        setState(() {
+          isLoading = true;
+        });
         _form.currentState!.save();
         print(_enteredPassword);
         print(_enteredEmail);
-        var loading = LoadingFromFirebase();
-        final loadedItems = await loading.loadUser();
+        final loadedItems = await connectToDataBase.loadUser();
         ref.read(usersProvider.notifier).addUsers(loadedItems.cast<User>());
         final userList = ref.watch(usersProvider);
 
+        if(userList.isEmpty){
+          setState(() {
+            isLoading = false;
+            showDialog(
+              context: context,
+              builder: (ctx) =>  Directionality(textDirection: TextDirection.rtl,
+                child: AlertDialog(
+                    content: const Text('خطا'),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('تایید'))
+                    ]),
+              ),
+            );
+          });
+        }
+        else{
         for (var user in userList) {
           if (user.userName == userController.text.trim()) {
             if (user.password == passController.text.trim()) {
@@ -54,12 +73,29 @@ class _AuthenticationScreenState extends ConsumerState<AuthenticationScreen> {
                 ),
               );
             }
-          }
+          } else {
+            setState(() {
+              isLoading = false;
+              showDialog(
+                context: context,
+                builder: (ctx) =>  Directionality(textDirection: TextDirection.rtl,
+                  child: AlertDialog(
+                      content: const Text('اطلاعات وارد شده اشتباه است'),
+                      actions: [
+                        TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('تایید'))
+                      ]),
+                ),
+              );
+            });
+          }}
         }
       }
     }
 
-    return Directionality(textDirection: TextDirection.rtl,
+    return Directionality(
+      textDirection: TextDirection.rtl,
       child: Scaffold(
         body: Stack(
           children: [
@@ -88,7 +124,7 @@ class _AuthenticationScreenState extends ConsumerState<AuthenticationScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextFormField(
-                          style: const TextStyle(color: Colors.white54),
+                            style: const TextStyle(color: Colors.white54),
                             decoration: const InputDecoration(
                               label: Text(
                                 'نام کاربری',
@@ -138,16 +174,20 @@ class _AuthenticationScreenState extends ConsumerState<AuthenticationScreen> {
                         const SizedBox(
                           height: 16,
                         ),
-                        SizedBox(width: 100,height: 50,
+                        SizedBox(
+                          width: 100,
+                          height: 50,
                           child: ElevatedButton(
-                            onPressed: isLoading ? (){} : submit,
+                            onPressed: isLoading ? () {} : submit,
                             style: ElevatedButton.styleFrom(
                                 backgroundColor:
                                     const Color.fromARGB(255, 191, 191, 203)),
-                            child: isLoading ? const CircularProgressIndicator() : const Text(
-                              'ورود',
-                              style: TextStyle(color: Colors.black),
-                            ),
+                            child: isLoading
+                                ? const CircularProgressIndicator()
+                                : const Text(
+                                    'ورود',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                           ),
                         ),
                       ],

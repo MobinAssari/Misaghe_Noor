@@ -41,6 +41,7 @@ dependencies:
   flutter_riverpod: ^2.3.6
   persian_datetime_picker: ^2.6.0
   intl: ^0.18.1
+  supabase_flutter: ^1.10.19
 
 dev_dependencies:
   flutter_test:
