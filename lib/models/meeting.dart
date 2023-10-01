@@ -5,19 +5,19 @@ class Meeting {
     required this.activityName,
     required this.date,
     required this.description,
-    required this.lastChangeUserId
+    required this.lastChangedUserId
   });
   late String id;
   late String? activityName;
   late String? date;
   late String? description;
-  late String? lastChangeUserId;
+  late String? lastChangedUserId;
 
   Meeting.fromJson(Map<String, dynamic> json){
     id = json['id'];
     activityName = json['activityName'];
     date = json['date'];
     description = json['description'];
-    lastChangeUserId = json['lastChangeUserId'];
+    lastChangedUserId = json['lastChangedUserId'];
   }
 }

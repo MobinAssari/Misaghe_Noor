@@ -87,7 +87,7 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
               children: [
                 ListTile(
                   // leading: const Icon(Icons.supervised_user_circle),
-                  title: Text(" ${meetingList[index].activityName}",style: TextStyle(fontSize: 22),),
+                  title: Text(" ${meetingList[index].activityName}",style: const TextStyle(fontSize: 22),overflow: TextOverflow.ellipsis,),
                   subtitle: Text(' ${date.year}/${date.month}/${date.day}'),
                   trailing: Wrap(
                     children: [

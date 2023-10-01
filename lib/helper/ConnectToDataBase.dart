@@ -206,13 +206,13 @@ class ConnectToDataBase {
     return response;*/
   }
 
-  void patchMeeting(Meeting meeting) async {
-    supabase.from('meeting').upsert({
+  void updateMeeting(Meeting meeting) async {
+    await supabase.from('meeting').upsert({
       'id' : meeting.id,
+      'activityName': meeting.activityName,
       'date': meeting.date.toString(),
       'description': meeting.description,
-      'lastChangeUserId': meeting.lastChangeUserId,
-      'activityName': meeting.activityName,
+      'lastChangedUserId': meeting.lastChangedUserId,
     });
    /* final url = Uri.https(dataBaseUrl, 'meetings-list/${meeting?.id}.json');
     final response = await http.patch(
@@ -234,7 +234,7 @@ class ConnectToDataBase {
     final response = await supabase.from('meeting').insert({
       'date': meeting.date.toString(),
       'description': meeting.description,
-      'lastChangedUserId': meeting.lastChangeUserId,
+      'lastChangedUserId': meeting.lastChangedUserId,
       'activityName': meeting.activityName,
     }).select();
     return response[0][

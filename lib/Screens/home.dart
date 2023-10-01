@@ -11,7 +11,7 @@ import 'package:misaghe_noor/data/dummy_presence.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  void saveMeeting() async {
+ /* void saveMeeting() async {
     final url = Uri.https(
         'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
         'meetings-list.json');
@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
           {
             'date': meeting.date.toString(),
             'description': meeting.description,
-            'lastChangeUserId': meeting.lastChangeUserId,
+            'lastChangeUserId': meeting.lastChangedUserId,
             'activityName': meeting.activityName,
           },
         ),
@@ -73,7 +73,7 @@ class HomeScreen extends StatelessWidget {
 
       print(response.body);
     }
-  }
+  }*/
 
   @override
   Widget build(context) {

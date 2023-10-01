@@ -94,12 +94,12 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
         _isSaving = true;
       });
       if (widget.isEdit) {
-        connectToDataBase.patchMeeting(Meeting(
+        connectToDataBase.updateMeeting(Meeting(
             id: meeting!.id,
             activityName: inputActivity,
             date: _selectedDate.toString(),
             description: descriptionController.text,
-            lastChangeUserId: enteredUserId));
+            lastChangedUserId: enteredUserId));
         /*final url = Uri.https(
             'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
             'meetings-list/${meeting?.id}.json');
@@ -123,7 +123,7 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
             activityName: inputActivity,
             date: _selectedDate.toString(),
             description: descriptionController.text,
-            lastChangeUserId: enteredUserId));
+            lastChangedUserId: enteredUserId));
         /*final url = Uri.https(
             'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
             'meetings-list.json');
@@ -147,7 +147,7 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
           activityName: inputActivity,
           date: _selectedDate.toString(),
           description: descriptionController.text,
-          lastChangeUserId: enteredUserId));
+          lastChangedUserId: enteredUserId));
       Navigator.of(context).pop();
     } else {}
   }
@@ -158,10 +158,13 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
     var isEdit = widget.isEdit;
 
     if (isEdit) {
+      dropdownValue = meeting!.activityName!;
+
       _selectedDate = DateTime.tryParse(meeting!.date!);
 
-      lastChangedUser =
-          ref.read(usersProvider.notifier).findUser(meeting!.lastChangeUserId!);
+      lastChangedUser = ref
+          .read(usersProvider.notifier)
+          .findUser(meeting!.lastChangedUserId!);
     }
 
     if (_isLoading) {
@@ -186,27 +189,30 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        DropdownButton(
-                            value: dropdownValue,
-                            items: activityList
-                                .map((e) => e.name)
-                                .toList()
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (newValue) {
-                              setState(
-                                () {
-                                  dropdownValue = newValue!;
-                                  inputActivity = newValue;
-                                },
-                              );
-                            }),
+                        Flexible(
+                          child: DropdownButton(
+                            isExpanded: true,
+                              value: dropdownValue,
+                              items: activityList
+                                  .map((e) => e.name)
+                                  .toList()
+                                  .map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,style: const TextStyle(fontSize: 12),overflow: TextOverflow.ellipsis,
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(
+                                  () {
+                                    dropdownValue = newValue!;
+                                    inputActivity = newValue;
+                                  },
+                                );
+                              }),
+                        ),
                         IconButton(
                             onPressed: () {
                               Navigator.of(context)
@@ -231,7 +237,7 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 8,
                     ),
                     TextFormField(
@@ -254,8 +260,10 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                                   height: 50.0,
                                   width: 50.0,
                                   child: Center(
-                                      child: CircularProgressIndicator(     valueColor:  AlwaysStoppedAnimation<Color>(Colors.white),
-                                      )))
+                                      child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
+                                  )))
                               : const Text('ذخیره'),
                         ),
                       ],
