@@ -1,79 +1,10 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:misaghe_noor/Screens/meetings.dart';
 import 'package:misaghe_noor/Screens/members.dart';
 import 'package:misaghe_noor/Screens/usersList.dart';
-import 'package:misaghe_noor/data/dummy_activity.dart';
-import 'package:misaghe_noor/data/dummy_meeting.dart';
-import 'package:misaghe_noor/data/dummy_presence.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
- /* void saveMeeting() async {
-    final url = Uri.https(
-        'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-        'meetings-list.json');
-    for (var meeting in dummyMeeting) {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(
-          {
-            'date': meeting.date.toString(),
-            'description': meeting.description,
-            'lastChangeUserId': meeting.lastChangedUserId,
-            'activityName': meeting.activityName,
-          },
-        ),
-      );
-
-      print(response.body);
-    }
-  }
-
-  void saveActivity() async {
-    final url = Uri.https(
-        'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-        'activities-list.json');
-    for (var activity in dummyActivity) {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(
-          {
-            'name': activity.name,
-          },
-        ),
-      );
-
-      print(response.body);
-    }
-  }
-
-  void savePresence() async {
-    final url = Uri.https(
-        'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-        'presences-list.json');
-    for (var presence in dummyPresence) {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(
-          {
-            'meetingId': presence.meetingId,
-            'memberId': presence.memberId,
-            'time': presence.time,
-            'enter': presence.enter,
-            'exit': presence.exit,
-          },
-        ),
-      );
-
-      print(response.body);
-    }
-  }*/
 
   @override
   Widget build(context) {

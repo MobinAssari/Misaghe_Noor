@@ -40,6 +40,7 @@ class _AuthenticationScreenState extends ConsumerState<AuthenticationScreen> {
         });
         _form.currentState!.save();
         final loadedItems = await connectToDataBase.loadUser();
+        print(loadedItems);
         ref.read(usersProvider.notifier).addUsers(loadedItems.cast<User>());
         final userList = ref.watch(usersProvider);
 

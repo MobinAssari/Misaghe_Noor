@@ -81,22 +81,6 @@ class _PresenceDetailsScreenState extends ConsumerState<PresenceDetailsScreen> {
             time: int.parse(totalText),
             enter: enterController.text,
             exit: exitController.text));
-        /*final url = Uri.https(
-            'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-            'presences-list/${presence?.id}.json');
-        await http.patch(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(
-            {
-              'meetingId': presence?.meetingId,
-              'memberId': member!.id,
-              'time': int.parse(totalText),
-              'enter': enterController.text,
-              'exit': exitController.text,
-            },
-          ),
-        );*/
         ref.read(presencesProvider.notifier).removePresence(presence!);
         presenceId = presence!.id;
       } else {
@@ -107,23 +91,6 @@ class _PresenceDetailsScreenState extends ConsumerState<PresenceDetailsScreen> {
             time: int.parse(totalText),
             enter: enterController.text,
             exit: exitController.text));
-        /*final url = Uri.https(
-            'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-            'presences-list.json');
-
-        final response = await http.post(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(
-            {
-              'meetingId': presence?.meetingId,
-              'memberId': member!.id,
-              'time': int.parse(totalText),
-              'enter': enterController.text,
-              'exit': exitController.text,
-            },
-          ),
-        );*/
       }
 
       ref.read(presencesProvider.notifier).addPresence(Presence(

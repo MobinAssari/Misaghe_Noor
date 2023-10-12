@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:misaghe_noor/helper/ConnectToDataBase.dart';
 import 'package:misaghe_noor/provider/activity_provider.dart';
+import 'package:misaghe_noor/provider/meetings_provider.dart';
 
 import '../models/activity.dart';
 
@@ -19,23 +20,8 @@ class _NewActivityScreenState extends ConsumerState<NewActivityScreen> {
 
   void _saving() async {
     if (textController.text.trim().isNotEmpty) {
-      activityId = await connectToDataBase.postActivity(textController.text.trim()) as dynamic;
- /*     final url = Uri.https(
-          'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-          'activities-list.json');
-
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(
-          {
-            'name': textController.text.trim(),
-          },
-        ),
-      );*/
-
-      //final Map<String, dynamic> resData = json.decode(response.data);
-      //userId = response['id'];
+      activityId = await connectToDataBase
+          .postActivity(textController.text.trim()) as dynamic;
       ref.read(activityProvider.notifier).addActivity(
             Activity(
               id: activityId,
@@ -49,7 +35,8 @@ class _NewActivityScreenState extends ConsumerState<NewActivityScreen> {
   @override
   Widget build(context) {
     activityList = ref.watch(activityProvider).reversed.toList();
-    return Directionality(textDirection: TextDirection.rtl,
+    return Directionality(
+      textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(title: Text('لیست فعالیت')),
         body: Directionality(
@@ -99,40 +86,65 @@ class _NewActivityScreenState extends ConsumerState<NewActivityScreen> {
                             children: [
                               IconButton(
                                 onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => Directionality(
-                                      textDirection: TextDirection.rtl,
-                                      child: AlertDialog(
-                                        content: Text('فعالیت حذف شود؟'),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () {
-                                                connectToDataBase.removeActivity(activityList[index].id);
-                                                /*final url = Uri.https(
-                                                    'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-                                                    'activities-list/${activityList[index].id}.json');
-                                                http.delete(url);*/
-                                                ref
-                                                    .read(
-                                                        activityProvider.notifier)
-                                                    .removeActivity(
-                                                        activityList[index]);
-                                                /*activityList
-                                                    .remove(activityList[index]);*/
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('بله')),
-                                          TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
-                                              child: const Text('خیر'))
-                                        ],
+                                  List<String> usedActivityList = ref
+                                      .read(meetingsProvider)
+                                      .map((e) => e.activityName!)
+                                      .toList();
+                                  if (usedActivityList
+                                      .contains(activityList[index].name)) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                           Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: AlertDialog(
+                                          content: const Text('قابل حذف نیست'),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: const Text('تایید'))
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: AlertDialog(
+                                          content: Text('فعالیت حذف شود؟'),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: const Text('خیر')),
+                                            TextButton(
+                                                onPressed: () {
+                                                  connectToDataBase
+                                                      .removeActivity(
+                                                          activityList[index]
+                                                              .id);
+                                                  ref
+                                                      .read(activityProvider
+                                                          .notifier)
+                                                      .removeActivity(
+                                                          activityList[index]);
+                                                  /*activityList
+                                                    .remove(activityList[index]);*/
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('بله')),
+
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 },
-                                icon: const Icon(Icons.delete, color: Colors.red),
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
                               ),
                             ],
                           ),

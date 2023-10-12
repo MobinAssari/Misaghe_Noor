@@ -54,25 +54,6 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
           isSending = true;
         });
         _form.currentState!.save();
-
-        /*Object myBody = json.encode(
-          {
-            'name': inputName,
-            'family': inputFamily,
-            'fatherName': inputFather,
-            'meliNumber': inputMeli,
-            'shenasnameNumber': inputShShenasname,
-            'address': inputAddress,
-            'phone': inputPhone,
-            'mobile': inputMobile,
-            'lastChangeUsreId': enteredUserId,
-          },
-        );
-        if (isEdit) {
-          final url = Uri.https(
-              'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-              'members-list/${member?.id}.json');
-          http.patch(url, body: myBody);*/
         if (isEdit) {
           memberId = member!.id;
           connectToDataBase.patchMember(Member(
@@ -88,14 +69,7 @@ class _MemberDetailsScreenState extends ConsumerState<MemberDetailsScreen> {
               lastChangedUserId: enteredUserId));
           ref.read(membersProvider.notifier).removeMember(member!);
         } else {
-          /*final url = Uri.https(
-            'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-            'members-list.json');
-        final response = await http.post(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: myBody,
-        );*/
+
           memberId = await connectToDataBase.postMember(Member(
               id: '',
               name: inputName,

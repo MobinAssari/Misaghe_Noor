@@ -39,7 +39,6 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
     _loadItem();
 
     if (widget.isEdit) {
@@ -47,17 +46,14 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
           ref.read(meetingsProvider.notifier).findMeeting(widget.meetingId);
       descriptionController.text = meeting!.description!;
       inputActivity = meeting!.activityName!;
-    } else {
-      _isLoading = false;
     }
+    super.initState();
   }
 
   void _loadItem() async {
     activityList = await ref.read(activityProvider);
-
     dropdownValue = activityList.first.name;
     inputActivity = dropdownValue;
-
     setState(
       () {
         _isLoading = false;
@@ -100,21 +96,6 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
             date: _selectedDate.toString(),
             description: descriptionController.text,
             lastChangedUserId: enteredUserId));
-        /*final url = Uri.https(
-            'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-            'meetings-list/${meeting?.id}.json');
-        final response = await http.patch(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(
-            {
-              'date': _selectedDate.toString(),
-              'description': descriptionController.text,
-              'lastChangeUserId': enteredUserId,
-              'activityName': inputActivity,
-            },
-          ),
-        );*/
         ref.read(meetingsProvider.notifier).removeMeeting(meeting!);
         meetingId = meeting!.id;
       } else {
@@ -124,22 +105,6 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
             date: _selectedDate.toString(),
             description: descriptionController.text,
             lastChangedUserId: enteredUserId));
-        /*final url = Uri.https(
-            'misaghe-noor-default-rtdb.asia-southeast1.firebasedatabase.app',
-            'meetings-list.json');
-
-        final response = await http.post(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(
-            {
-              'date': _selectedDate.toString(),
-              'description': descriptionController.text,
-              'lastChangeUserId': enteredUserId,
-              'activityName': inputActivity,
-            },
-          ),
-        );*/
       }
 
       ref.read(meetingsProvider.notifier).addMeeting(Meeting(
@@ -155,9 +120,16 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
   @override
   Widget build(context) {
     activityList = ref.watch(activityProvider);
+    List<String> activityNameList = activityList.map((e) => e.name).toList();
     var isEdit = widget.isEdit;
 
     if (isEdit) {
+      if (!activityNameList.contains(meeting!.activityName)) {
+        activityList.add(Activity(id: '', name: meeting!.activityName!));
+        ref
+            .read(activityProvider.notifier)
+            .addActivity(Activity(id: '', name: meeting!.activityName!));
+      }
       dropdownValue = meeting!.activityName!;
 
       _selectedDate = DateTime.tryParse(meeting!.date!);
@@ -191,16 +163,19 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                       children: [
                         Flexible(
                           child: DropdownButton(
-                            isExpanded: true,
+                              isExpanded: true,
                               value: dropdownValue,
                               items: activityList
                                   .map((e) => e.name)
                                   .toList()
-                                  .map<DropdownMenuItem<String>>((String value) {
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(
-                                    value,style: const TextStyle(fontSize: 12),overflow: TextOverflow.ellipsis,
+                                    value,
+                                    style: const TextStyle(fontSize: 12),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 );
                               }).toList(),
@@ -221,7 +196,10 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                                       builder: (ctx) => NewActivityScreen(),
                                     ),
                                   )
-                                  .then((_) => setState(() {}));
+                                  .then((_) => setState(() async {
+                                        _isLoading = true;
+                                        _loadItem();
+                                      }));
                             },
                             icon: const Icon(Icons.add)),
                         const SizedBox(
@@ -260,10 +238,12 @@ class _MeetingDetailsScreenState extends ConsumerState<MeetingDetailsScreen> {
                                   height: 50.0,
                                   width: 50.0,
                                   child: Center(
-                                      child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
-                                  )))
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    ),
+                                  ),
+                                )
                               : const Text('ذخیره'),
                         ),
                       ],

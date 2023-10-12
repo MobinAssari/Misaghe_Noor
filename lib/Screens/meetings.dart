@@ -115,7 +115,8 @@ class _MeetingsScreenState extends ConsumerState<MeetingsScreen> {
                                 meetingId: meetingList[index].id,
                               ),
                             ),
-                          );
+                          ).then((_) => setState(() {
+                          }));
                         },
                         icon: const Icon(
                           Icons.edit,
